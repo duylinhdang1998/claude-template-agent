@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agent Monitor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xterm/xterm@5/css/xterm.css">
+  <style>
+    @font-face {
+      font-family: 'JetBrainsMono NF';
+      src: url('https://cdn.jsdelivr.net/gh/ryanoasis/nerd-fonts@latest/patched-fonts/JetBrainsMono/Ligatures/Regular/JetBrainsMonoNerdFont-Regular.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'JetBrainsMono NF';
+      src: url('https://cdn.jsdelivr.net/gh/ryanoasis/nerd-fonts@latest/patched-fonts/JetBrainsMono/Ligatures/Bold/JetBrainsMonoNerdFont-Bold.ttf') format('truetype');
+      font-weight: 700;
+      font-style: normal;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- Left: Terminal (40%) -->
+    <div class="terminal-panel">
+      <div class="terminal-header">
+        <div class="terminal-title">
+          <span class="terminal-icon">▸</span>
+          Terminal
+        </div>
+      </div>
+      <div class="terminal-body" id="terminal-body">
+        <div id="terminal-container"></div>
+      </div>
+    </div>
+
+    <!-- Right: Agent Monitor (50%) -->
+    <div class="monitor-side">
+      <div class="main-grid">
+        <div class="column">
+          <div class="card">
+            <div class="card-header-row">
+              <div class="card-title">Core Team</div>
+              <div class="mini-stats">
+                <span class="mini-stat"><span id="stat-sessions">0</span> active</span>
+                <span class="mini-stat highlight"><span id="stat-agents">0</span> specialists</span>
+              </div>
+            </div>
+            <div class="team-row" id="team-row">
+              <div class="member" data-role="CEO">
+                <div class="member-avatar ceo">C</div>
+                <div class="member-name">CEO</div>
+                <div class="member-count"></div>
+              </div>
+              <div class="member" data-role="CTO">
+                <div class="member-avatar cto">T</div>
+                <div class="member-name">CTO</div>
+                <div class="member-count"></div>
+              </div>
+              <div class="member" data-role="PM">
+                <div class="member-avatar pm">P</div>
+                <div class="member-name">PM</div>
+                <div class="member-count"></div>
+              </div>
+              <div class="member" data-role="BA">
+                <div class="member-avatar ba">B</div>
+                <div class="member-name">BA</div>
+                <div class="member-count"></div>
+              </div>
+              <div class="member" data-role="HR">
+                <div class="member-avatar hr">H</div>
+                <div class="member-name">HR</div>
+                <div class="member-count"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card flex-grow">
+            <div class="card-title">Specialist Agents</div>
+            <div class="agents-list" id="agents-list">
+              <div class="empty-state">No agents running</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column">
+          <div class="card" id="progress-card">
+            <div class="card-header-row">
+              <div class="card-title">Project Progress</div>
+              <div class="progress-sprint" id="progress-sprint">-</div>
+            </div>
+            <div class="progress-bar-container">
+              <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+            </div>
+            <div class="progress-stats">
+              <span><div class="dot complete"></div><span id="stat-complete">0</span> done</span>
+              <span><div class="dot in-progress"></div><span id="stat-in-progress">0</span> active</span>
+              <span><div class="dot pending"></div><span id="stat-pending">0</span> pending</span>
+            </div>
+          </div>
+
+          <div class="card flex-grow" id="tasks-card">
+            <div class="card-title">Sprint Tasks</div>
+            <div class="tasks-list" id="tasks-list">
+              <div class="empty-state">No tasks</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div hidden><div id="status-dot"></div><span id="status-text"></span></div>
+  <script src="https://cdn.jsdelivr.net/npm/@xterm/xterm@5/lib/xterm.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@xterm/addon-fit@0/lib/addon-fit.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@xterm/addon-web-links@0/lib/addon-web-links.js"></script>
+  <script type="module" src="scripts/app.js"></script>
+  <script src="scripts/terminal.js"></script>
+</body>
+</html>

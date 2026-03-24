@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+pnpm-lock.yaml
+
+# Build outputs
+dist/
+.next/
+build/
+out/
+
+# Test & Coverage
+coverage/
+test-results/
+
+# Database
+*.db
+*.db-journal
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# TypeScript
+*.tsbuildinfo
+
+# Logs
+*.log
+npm-debug.log*
+
+# System (claude)
+.claude/agent-memory/
+.claude/.active-core
+.claude/monitor/state/
+.agent/
+
+# Misc
+.release-it.json
