@@ -1,8 +1,32 @@
 ---
 name: clone-website
-description: Reverse-engineer and clone one or more websites in one shot — extracts assets, CSS, and content section-by-section and proactively dispatches parallel builder agents in worktrees as it goes. Use this whenever the user wants to clone, replicate, rebuild, reverse-engineer, or copy any website. Also triggers on phrases like "make a copy of this site", "rebuild this page", "pixel-perfect clone". Provide one or more target URLs as arguments.
+description: INTERNAL TOOL — only invoked by specialist agents (meta-react-architect, apple-ux-wireframer) during a sprint task assigned by PM in the /work workflow. Do NOT trigger directly on user requests. If the user asks to clone/replicate/rebuild a website, route them to /work first; the CEO will scope it as a project, PM will plan a sprint, and a specialist will then load this skill to execute extraction and rebuild.
 ---
 # Clone Website
+
+## ⛔ Workflow Gate (READ FIRST)
+
+This skill is part of the **VFM Agent Company** workflow and MUST run inside a sprint task.
+
+**Before doing anything, check:**
+
+1. Does `.project/sprints/` directory exist with an active sprint? If NO → **STOP**.
+2. Are you currently a specialist agent (Sarah/Marcus/etc.) executing a PM-assigned task? If NO → **STOP**.
+
+**If either check fails, respond exactly:**
+
+> 🎯 Website cloning is a project-scope task in this workspace. Please run:
+> ```
+> /work "Clone the website at <URL>"
+> ```
+> The CEO will approve scope, PM will create a sprint, and a frontend specialist will execute the clone using this skill. Do not run clone-website directly.
+
+Then **stop** — do not extract, do not spawn builder agents, do not write files.
+
+If both checks pass, proceed below.
+
+---
+
 
 You are about to reverse-engineer and rebuild **$ARGUMENTS** as pixel-perfect clones.
 

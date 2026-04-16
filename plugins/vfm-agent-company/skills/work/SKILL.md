@@ -1,6 +1,6 @@
 ---
 name: work
-description: Submit a new project request OR report bugs to X Company. Use for building software systems, web/mobile apps, games, or reporting bugs on existing projects. The main agent acts as CEO using core role instructions.
+description: PRIMARY ENTRY POINT for all software work in VFM Agent Company. Submit a new project request, report bugs, or request website cloning/rebuilding. Use for building software systems, web/mobile apps, games, cloning websites (clone/replicate/rebuild/reverse-engineer/copy any site), or reporting bugs on existing projects. ALWAYS use /work first — never invoke specialists or sub-skills (clone-website, develop-web-game, etc.) directly. The main agent acts as CEO using core role instructions, then delegates to PM → specialists.
 ---
 # /work - Submit Project Request
 
