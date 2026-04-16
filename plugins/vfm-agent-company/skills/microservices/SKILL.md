@@ -1,17 +1,7 @@
 ---
 name: microservices
 description: Microservices architecture expertise from Netflix. Build resilient, scalable distributed systems with Netflix OSS tools (Eureka, Hystrix, Zuul). Proven at 260M+ subscribers with 99.999% uptime.
-expert_level: 10/10
-source_company: Netflix
-specialist: netflix-backend-architect
-requires:
-  - java-spring-expert
-related:
-  - chaos-engineering
-  - aws-expert
-  - kubernetes-expert
 ---
-
 # Microservices Architecture - Netflix Expertise
 
 **Expert**: Marcus Johnson (Netflix Principal Engineer, 15 years)

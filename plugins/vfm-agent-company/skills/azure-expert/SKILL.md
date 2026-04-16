@@ -1,14 +1,7 @@
 ---
 name: azure-expert
 description: Microsoft Azure cloud expertise from Azure architects with 16 years of experience. Enterprise-grade cloud infrastructure, .NET integration, hybrid cloud, and compliance. Use when working with Azure services, deploying to Azure, or integrating with Microsoft stack. Learn Azure from Microsoft engineers.
-expert_level: 10/10
-source_company: Microsoft Azure
-specialist: microsoft-azure-architect
-related:
-  - dotnet-expert
-  - kubernetes-expert
 ---
-
 # Azure Expert - Microsoft Cloud Platform
 
 **Expert**: James Thompson (Microsoft Azure, 16 years)

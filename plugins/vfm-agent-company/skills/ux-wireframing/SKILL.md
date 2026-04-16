@@ -2,7 +2,6 @@
 name: ux-wireframing
 description: Create ASCII wireframes for web and mobile apps before development. Use when designing screens, visualizing UI flows, creating mockups for user approval, planning layouts, or explaining UI ideas without design tools. Triggers on wireframe, mockup, UI design, screen layout, prototype, ASCII art, user flow diagram.
 ---
-
 # UX Wireframing Skill
 
 Create beautiful ASCII art wireframes for web and mobile applications. Use this skill whenever you need to visualize UI screens before development, create mockups for user approval, design interaction flows, or communicate UI ideas quickly without graphic design tools. Especially useful during requirements gathering, sprint planning, or when explaining features to stakeholders.

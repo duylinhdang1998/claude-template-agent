@@ -2,7 +2,6 @@
 name: work
 description: Submit a new project request OR report bugs to X Company. Use for building software systems, web/mobile apps, games, or reporting bugs on existing projects. The main agent acts as CEO using core role instructions.
 ---
-
 # /work - Submit Project Request
 
 **SESSION ID**: `${CLAUDE_SESSION_ID}`

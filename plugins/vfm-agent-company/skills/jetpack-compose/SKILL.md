@@ -2,7 +2,6 @@
 name: jetpack-compose
 description: Modern Android UI development with Jetpack Compose from Google's Android team. Use when building declarative Android UIs, creating Compose screens and components, implementing Material Design 3, handling navigation with Compose Navigation, managing state with remember/mutableStateOf, or building responsive layouts. Triggers on Jetpack Compose, Compose UI, Android UI, Material3, composable functions, or Android declarative UI.
 ---
-
 # Jetpack Compose - Modern Android UI
 
 **Purpose**: Build native Android UIs with declarative Jetpack Compose framework

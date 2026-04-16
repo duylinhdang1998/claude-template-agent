@@ -2,7 +2,6 @@
 name: real-time-systems
 description: Real-Time Systems - WebSocket & Live Data Mastery. Build chat apps, live dashboards, collaborative tools, multiplayer games, or real-time notifications. Use when implementing bidirectional communication, live updates, or instant messaging.
 ---
-
 # Real-Time Systems - WebSocket & Live Data Mastery
 
 **Purpose**: Build real-time, bidirectional communication systems for chat, notifications, collaboration, and live updates

@@ -2,7 +2,6 @@
 name: mcp-integration
 description: Manage MCP (Model Context Protocol) servers - discover, analyze, execute tools. Use for external service integrations, browser automation, documentation lookup, AI image/video generation, database connections, and any MCP server management.
 ---
-
 # MCP Integration
 
 ## Overview

@@ -2,7 +2,6 @@
 name: ml-infrastructure
 description: Machine Learning infrastructure and MLOps from Google AI. Use when building ML training pipelines, deploying models to production (TensorFlow Serving, TorchServe, Vertex AI), setting up feature stores, implementing model monitoring and drift detection, orchestrating ML workflows (Kubeflow, Airflow), or managing experiment tracking (MLflow, W&B). Triggers on MLOps, ML pipeline, model deployment, model serving, feature engineering, training infrastructure, or ML platform.
 ---
-
 # ML Infrastructure - Machine Learning Pipelines & Deployment
 
 **Purpose**: Build, train, and deploy machine learning models at scale with MLOps best practices

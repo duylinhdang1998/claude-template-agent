@@ -2,7 +2,6 @@
 name: observability
 description: Production observability from Google SRE and Netflix. Use when implementing structured logging, setting up metrics collection (Prometheus, Datadog, CloudWatch), configuring distributed tracing (Jaeger, OpenTelemetry), creating dashboards (Grafana), defining alert rules, or building observability pipelines. Triggers on logging, monitoring, tracing, metrics, alerts, dashboards, Prometheus, Grafana, OpenTelemetry, or production observability.
 ---
-
 # Observability - Logging, Monitoring & Tracing
 
 **Purpose**: Implement comprehensive observability for production systems with logs, metrics, and distributed tracing

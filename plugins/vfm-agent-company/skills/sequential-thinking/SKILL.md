@@ -2,7 +2,6 @@
 name: sequential-thinking
 description: Apply step-by-step analysis for complex problems with revision capability. Use for multi-step reasoning, hypothesis verification, adaptive planning, problem decomposition, architecture decisions, debugging complex issues.
 ---
-
 # Sequential Thinking
 
 Structured problem-solving via manageable, reflective thought sequences with dynamic adjustment.

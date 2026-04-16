@@ -1,15 +1,7 @@
 ---
 name: sre-practices
 description: Site Reliability Engineering practices from Google - the company that invented SRE. Master SLOs, error budgets, incident response, and toil elimination. Use when designing reliable systems, implementing SRE practices, or improving operational excellence. Learn from the team that runs Google Search, Gmail, and YouTube at billions of users scale.
-expert_level: 10/10
-source_company: Google SRE
-specialist: google-sre-devops
-related:
-  - kubernetes-expert
-  - observability
-  - chaos-engineering
 ---
-
 # SRE Practices - Google Site Reliability Engineering
 
 **Expert**: Alex Kim (Google SRE, 11 years)

@@ -1,15 +1,7 @@
 ---
 name: company
 description: X Company management panel — real-time dashboard with integrated terminal showing agent activity, core roles, specialists, and project progress. Use to start/stop the company panel. Triggers on "company", "monitor", "dashboard", "team status", "who is working".
-user_invocable: true
-match_terms:
-  - company
-  - monitor
-  - dashboard
-  - team
-  - who is working
 ---
-
 # X Company Panel
 
 Real-time management dashboard with integrated terminal:

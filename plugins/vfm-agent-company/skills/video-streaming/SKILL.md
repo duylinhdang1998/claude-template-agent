@@ -1,15 +1,7 @@
 ---
 name: video-streaming
 description: Video streaming expertise from Netflix - the world's largest streaming service. Master video encoding, adaptive bitrate streaming, CDN optimization, and global delivery. Use when building video platforms, optimizing streaming quality, or scaling video delivery. Learn from 260M+ subscribers, 99.999% uptime.
-expert_level: 10/10
-source_company: Netflix
-specialist: netflix-backend-architect
-related:
-  - aws-expert
-  - microservices
-  - performance-optimization
 ---
-
 # Video Streaming - Netflix Expertise
 
 **Expert**: Marcus Johnson (Netflix, 14 years)

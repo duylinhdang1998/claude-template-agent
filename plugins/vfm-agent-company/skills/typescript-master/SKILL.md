@@ -2,7 +2,6 @@
 name: typescript-master
 description: Advanced TypeScript expertise for building type-safe applications at scale. Use when designing complex type systems, creating generic utilities, implementing discriminated unions, fixing type errors, configuring tsconfig.json, working with conditional types/mapped types/template literals, or enforcing strict type safety across large codebases. Triggers on TypeScript types, generics, type inference, tsconfig, type errors, advanced types, or TypeScript best practices.
 ---
-
 # TypeScript Master - Type Safety at Scale
 
 **Purpose**: Master TypeScript for building type-safe, maintainable applications at scale

@@ -2,7 +2,6 @@
 name: security-expert
 description: Application security expertise covering OWASP Top 10 prevention. Use when implementing authentication (JWT, OAuth2, OIDC), authorization (RBAC, ABAC), encryption (AES, RSA, TLS), securing APIs, preventing XSS/CSRF/SQL injection, conducting security audits, managing secrets, or hardening production systems. Triggers on security, authentication, authorization, encryption, OWASP, vulnerability, XSS, CSRF, or security best practices.
 ---
-
 # Security Expert - Application Security & Best Practices
 
 **Purpose**: Implement secure authentication, authorization, encryption, and protection against common vulnerabilities (OWASP Top 10)

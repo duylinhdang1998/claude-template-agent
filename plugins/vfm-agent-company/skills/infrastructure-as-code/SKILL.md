@@ -2,7 +2,6 @@
 name: infrastructure-as-code
 description: Infrastructure as Code with Terraform and AWS CDK. Use when writing Terraform configurations (HCL), provisioning cloud resources (VPC, subnets, EC2, ECS, RDS, S3), setting up AWS CDK stacks in TypeScript, managing multi-environment infrastructure (dev/staging/prod), or automating cloud provisioning. Triggers on Terraform, CDK, infrastructure provisioning, cloud setup, IaC, HCL, CloudFormation, or environment management.
 ---
-
 # Infrastructure as Code - Terraform & AWS CDK
 
 **Purpose**: Automate infrastructure provisioning with code for consistency, version control, and repeatability

@@ -1,13 +1,7 @@
 ---
 name: swift-expert
 description: iOS development mastery with Swift from Apple. Build native iOS apps with SwiftUI, UIKit, and Apple's design principles. Expertise from the iOS Platform Team.
-expert_level: 10/10
-source_company: Apple (iOS Platform Team)
-specialist: apple-ios-lead
-related:
-  - ios-architecture
 ---
-
 # Swift Expert - Apple iOS Development
 
 **Expert**: David Park (Apple iOS Platform Team, 15 years)

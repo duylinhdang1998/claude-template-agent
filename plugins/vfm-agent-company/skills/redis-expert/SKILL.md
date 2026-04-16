@@ -2,7 +2,6 @@
 name: redis-expert
 description: Redis in-memory data store expertise from Netflix engineers. Use when implementing caching strategies, managing user sessions, building real-time leaderboards, pub/sub messaging, rate limiting, distributed locks, or optimizing Redis data structures (strings, hashes, sets, sorted sets, streams). Triggers on Redis, caching, session store, pub/sub, rate limiting, in-memory database, or ElastiCache.
 ---
-
 # Redis Expert - In-Memory Data Store Mastery
 
 **Purpose**: Master Redis for caching, sessions, real-time features, and high-performance data storage

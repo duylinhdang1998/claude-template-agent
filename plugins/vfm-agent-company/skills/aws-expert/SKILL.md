@@ -1,12 +1,7 @@
 ---
 name: aws-expert
 description: AWS cloud architecture and serverless expertise from Amazon veterans (Distinguished Engineers, Prime Day scale). Use when setting up AWS infrastructure (EC2, ECS, EKS, Lambda, S3, RDS, DynamoDB), designing high-availability architectures, optimizing cloud costs, building serverless APIs with API Gateway, or deploying multi-region systems. Triggers on AWS services, cloud infrastructure, serverless, auto-scaling, VPC, CloudFront, IAM, or any Amazon Web Services task.
-category: infrastructure
-level: 8-10
-companies: [Amazon, Netflix, Airbnb]
-related_skills: [terraform, kubernetes-expert, serverless]
 ---
-
 # AWS Expert Skill
 
 ## Overview

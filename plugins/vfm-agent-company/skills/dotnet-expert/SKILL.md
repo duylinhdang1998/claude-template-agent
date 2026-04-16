@@ -1,15 +1,7 @@
 ---
 name: dotnet-expert
 description: Microsoft .NET expertise from Microsoft engineers. Master C#, ASP.NET Core, Entity Framework, Blazor, and Azure integration. Use when building .NET applications, APIs, or enterprise systems. Learn from the company that created .NET and powers enterprise applications worldwide.
-expert_level: 10/10
-source_company: Microsoft
-specialist: microsoft-azure-architect
-related:
-  - azure-expert
-  - kubernetes-expert
-  - microservices
 ---
-
 # .NET Expert - Microsoft .NET Platform Mastery
 
 **Expert**: James Thompson (Microsoft Azure, 16 years)

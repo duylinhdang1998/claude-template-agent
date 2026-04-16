@@ -2,7 +2,6 @@
 name: devops-release
 description: DevOps and Release Engineering from Netflix (8000+ deployments/day, 260M+ subscribers). Use when setting up CI/CD pipelines (GitHub Actions), containerizing with Docker, deploying to Kubernetes, configuring monitoring/alerting (Datadog, Prometheus), implementing canary/blue-green deployments, writing operations runbooks, or managing production releases. Triggers on CI/CD, deployment, pipeline, Docker, release, monitoring, alerting, rollback, or infrastructure automation.
 ---
-
 # DevOps & Release Engineering - Netflix-Grade Infrastructure
 
 **Purpose**: Complete DevOps and release management procedures from Netflix

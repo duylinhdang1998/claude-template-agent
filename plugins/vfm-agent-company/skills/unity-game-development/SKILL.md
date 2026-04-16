@@ -2,7 +2,6 @@
 name: unity-game-development
 description: Unity game development expertise covering Unity 2D/3D, C# programming, game mechanics, multiplayer networking, and performance optimization. Use when building games with Unity engine, implementing game systems (player controllers, physics, AI, combat), optimizing for 60 FPS, setting up multiplayer with Unity Netcode/Mirror, or working with Unity-specific features (ScriptableObjects, Prefabs, Animation, UI). Applies to PC, mobile, console, and WebGL platforms.
 ---
-
 # Unity Game Development
 
 Expert guidance for building games with Unity engine. Covers architecture, performance, networking, and Unity-specific patterns.

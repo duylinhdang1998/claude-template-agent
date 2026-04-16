@@ -2,7 +2,6 @@
 name: software-architecture
 description: Software architecture design from Google Principal Engineers. Use when designing folder structures, implementing Clean Architecture or Hexagonal Architecture, applying Domain-Driven Design (DDD), enforcing SOLID principles, choosing design patterns (Repository, Factory, Strategy, Observer), refactoring complex modules, or planning system boundaries. Triggers on architecture, clean code, DDD, SOLID, design patterns, folder structure, refactoring, or code organization.
 ---
-
 # Software Architecture - Clean Code & Domain Expertise
 
 **Purpose**: Design maintainable, scalable software systems using Clean Architecture, DDD, and SOLID principles

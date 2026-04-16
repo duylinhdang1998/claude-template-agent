@@ -2,7 +2,6 @@
 name: node-backend
 description: Node.js backend development from Netflix architects (260M+ users scale). Use when building REST APIs with Express/Fastify, implementing authentication (JWT, OAuth), designing database schemas, creating middleware, handling file uploads, building microservices in Node.js, or optimizing server performance. Triggers on Node.js backend, Express, Fastify, REST API, server-side JavaScript, middleware, or Node.js API development.
 ---
-
 # Node.js Backend - Server-Side JavaScript Mastery
 
 **Purpose**: Build scalable, high-performance backend systems with Node.js

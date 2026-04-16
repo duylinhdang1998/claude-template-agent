@@ -1,17 +1,7 @@
 ---
 name: java-spring-expert
 description: Java Spring Boot expertise from Netflix engineers. Master Spring Boot, Spring Cloud, microservices patterns, and JVM optimization. Use when building Spring Boot applications, microservices, or Java backends. Learn from the company that streams to 260M+ subscribers with 99.999% uptime.
-expert_level: 10/10
-source_company: Netflix
-specialist: netflix-backend-architect
-requires:
-  - microservices
-related:
-  - aws-expert
-  - kubernetes-expert
-  - chaos-engineering
 ---
-
 # Java Spring Expert - Netflix Spring Boot Mastery
 
 **Expert**: Marcus Johnson (Netflix, 14 years)

@@ -2,7 +2,6 @@
 name: systematic-debugging
 description: Use when encountering any bug, test failure, or unexpected behavior. 4-phase root cause investigation BEFORE proposing fixes. Use for production bugs, test failures, performance issues, build failures.
 ---
-
 # Systematic Debugging
 
 ## The Iron Law

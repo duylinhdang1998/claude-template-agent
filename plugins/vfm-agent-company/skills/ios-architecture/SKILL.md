@@ -2,7 +2,6 @@
 name: ios-architecture
 description: iOS app architecture design with SwiftUI and MVVM from Apple's iOS Platform Team. Use when designing scalable iOS app structure, implementing MVVM/Clean Architecture in Swift, organizing Xcode projects, setting up navigation patterns, managing dependencies with Swift Package Manager, or planning data flow with Combine/async-await. Triggers on iOS architecture, SwiftUI app structure, MVVM pattern, iOS project setup, or Swift app design.
 ---
-
 # iOS Architecture - SwiftUI & MVVM
 
 **Purpose**: Design scalable iOS applications with clean architecture patterns

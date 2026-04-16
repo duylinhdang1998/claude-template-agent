@@ -1,17 +1,7 @@
 ---
 name: kubernetes-expert
 description: Production Kubernetes expertise from Google - the company that created Kubernetes. Running K8s at planet scale with billions of containers, 99.99% uptime, and zero-downtime deployments. Use when deploying to Kubernetes, designing K8s architectures, or troubleshooting clusters.
-expert_level: 10/10
-source_company: Google (Kubernetes creators)
-specialist: google-sre-devops
-requires:
-  - sre-practices
-related:
-  - gcp-expert
-  - observability
-  - infrastructure-as-code
 ---
-
 # Kubernetes Expert - Google Expertise
 
 **Expert**: Alex Kim (Google SRE, 11 years)

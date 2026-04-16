@@ -2,7 +2,6 @@
 name: competitive-analysis
 description: Competitive Analysis using Google's Intelligence Framework. Use when analyzing competitor websites, extracting features from reference products, mapping user journeys, detecting tech stacks, or when the user says "build like X.com". Covers site analysis, feature extraction with MoSCoW prioritization, user journey mapping, and tech stack detection. Triggers on competitor analysis, "giống như", "like X", feature comparison, market research, or reverse-engineering existing products.
 ---
-
 # Competitive Analysis - Google Intelligence Framework
 
 **Purpose**: Analyze competitor websites to extract features, user flows, and actionable insights for product development

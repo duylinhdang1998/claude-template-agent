@@ -1,18 +1,7 @@
 ---
 name: chaos-engineering
 description: Chaos Engineering expertise from Netflix - the company that invented Chaos Monkey. Build resilient systems through controlled failure injection. Use when implementing resilience testing, chaos experiments, or building fault-tolerant systems. Learn from the pioneers of chaos engineering.
-expert_level: 10/10
-source_company: Netflix
-specialist: netflix-backend-architect
-requires:
-  - microservices
-  - observability
-related:
-  - sre-practices
-  - kubernetes-expert
-  - aws-expert
 ---
-
 # Chaos Engineering - Netflix Chaos Monkey Expertise
 
 **Expert**: Marcus Johnson (Netflix, 14 years)

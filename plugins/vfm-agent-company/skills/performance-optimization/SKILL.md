@@ -1,16 +1,7 @@
 ---
 name: performance-optimization
 description: Frontend and mobile performance optimization expertise from Meta. Techniques for 60fps animations, Core Web Vitals, app startup optimization, and delivering buttery-smooth experiences at Instagram/Facebook scale. Use when optimizing web/mobile performance, improving load times, or achieving perfect Core Web Vitals scores.
-expert_level: 10/10
-source_company: Meta (Facebook/Instagram)
-specialist: meta-react-architect
-requires:
-  - react-expert
-related:
-  - next-js-expert
-  - typescript-master
 ---
-
 # Performance Optimization - Meta Expertise
 
 **Expert**: Sarah Chen (Meta React Core Team, 12 years)

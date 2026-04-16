@@ -1,16 +1,7 @@
 ---
 name: deep-learning
 description: Deep Learning expertise from Google DeepMind - creators of AlphaGo, Transformers, and BERT. Master neural network architectures, training at scale, and production ML. Use when building ML models, training neural networks, or deploying AI systems. Learn from the team behind Google Search, YouTube recommendations, and Google Photos.
-expert_level: 10/10
-source_company: Google DeepMind / Google AI
-specialist: google-ai-researcher
-requires:
-  - gcp-expert
-related:
-  - nlp-expert
-  - ml-infrastructure
 ---
-
 # Deep Learning - Google DeepMind Expertise
 
 **Expert**: Dr. Emily Rodriguez (Google DeepMind, 10 years)

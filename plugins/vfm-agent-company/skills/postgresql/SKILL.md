@@ -2,7 +2,6 @@
 name: postgresql
 description: Production PostgreSQL expertise from Amazon/Netflix engineers. Use when designing database schemas, writing complex SQL queries, optimizing query performance with EXPLAIN ANALYZE, creating indexes, setting up replication, configuring connection pooling (PgBouncer), implementing migrations, or tuning PostgreSQL for high throughput. Triggers on PostgreSQL, Postgres, SQL queries, database schema, indexes, migrations, or relational database optimization.
 ---
-
 # PostgreSQL - Production Database Expertise
 
 **Purpose**: Master PostgreSQL for building scalable, reliable data storage systems

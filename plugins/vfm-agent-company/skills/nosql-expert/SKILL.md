@@ -2,7 +2,6 @@
 name: nosql-expert
 description: NoSQL database expertise with MongoDB and DynamoDB from Amazon/Netflix engineers. Use when designing document schemas, optimizing MongoDB queries and indexes, configuring DynamoDB tables with GSI/LSI, implementing data modeling for flexible schemas, handling horizontal scaling, or migrating from SQL to NoSQL. Triggers on MongoDB, DynamoDB, NoSQL, document database, collection design, partition keys, or non-relational database tasks.
 ---
-
 # NoSQL Expert - MongoDB & DynamoDB Mastery
 
 **Purpose**: Design and optimize NoSQL databases for flexible schemas, horizontal scaling, and high performance

@@ -2,7 +2,6 @@
 name: kotlin-expert
 description: Kotlin expertise for modern Android development from Google's Android team. Use when writing Kotlin code, using coroutines and Flow for async operations, implementing Kotlin DSLs, working with sealed classes/data classes, integrating Hilt/Dagger for DI, using Room database, or optimizing Kotlin performance. Triggers on Kotlin, coroutines, Flow, Android Kotlin, Hilt, Room, or Kotlin-specific patterns.
 ---
-
 # Kotlin Expert - Modern Android Development
 
 **Purpose**: Master Kotlin for building robust, concise Android applications

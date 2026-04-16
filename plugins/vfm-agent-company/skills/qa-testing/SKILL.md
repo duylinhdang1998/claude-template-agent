@@ -2,7 +2,6 @@
 name: qa-testing
 description: Comprehensive QA and testing methodology from Google (Chrome/Android scale, 2B+ users). Use when writing unit tests (Jest, Vitest), integration tests, E2E tests (Playwright, Cypress), performance tests (k6), security tests (OWASP), setting up test coverage, creating test plans, or coordinating UAT sign-off. Triggers on testing, test cases, test coverage, QA, E2E tests, unit tests, integration tests, or quality assurance.
 ---
-
 # QA Testing - Comprehensive Testing Skills
 
 **Purpose**: Complete testing methodology from Google's testing infrastructure team

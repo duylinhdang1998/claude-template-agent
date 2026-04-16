@@ -1,16 +1,7 @@
 ---
 name: graphql-expert
 description: GraphQL API expertise from Meta - the company that created GraphQL. Build efficient, type-safe APIs with powerful querying capabilities. Use when building GraphQL APIs, implementing GraphQL clients, or migrating from REST to GraphQL. Learn GraphQL from Facebook/Instagram's production experience.
-expert_level: 9/10
-source_company: Meta (Facebook/Instagram)
-specialist: meta-react-architect
-requires:
-  - react-expert
-related:
-  - typescript-master
-  - node-backend
 ---
-
 # GraphQL Expert - Meta Created GraphQL
 
 **Expert**: Sarah Chen (Meta React Core Team, 12 years)

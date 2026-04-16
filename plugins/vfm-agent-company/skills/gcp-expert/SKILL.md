@@ -1,16 +1,7 @@
 ---
 name: gcp-expert
 description: Google Cloud Platform expertise from Google engineers. Master GCP services, GKE, BigQuery, Vertex AI, and cloud-native architecture. Use when working with Google Cloud services, deploying to GCP, or designing GCP architectures. Learn from the company that runs Google Search, YouTube, and Gmail on their own infrastructure.
-expert_level: 10/10
-source_company: Google
-specialist: google-ai-researcher, google-sre-devops
-requires:
-  - kubernetes-expert
-related:
-  - deep-learning
-  - sre-practices
 ---
-
 # GCP Expert - Google Cloud Platform Mastery
 
 **Experts**: Emily Rodriguez (Google AI, 10 years), Alex Kim (Google SRE, 11 years)

@@ -2,7 +2,6 @@
 name: visual-preview
 description: Generate visual explanations, diagrams, and slides. Use when explaining complex code, architecture, data flows, or any topic that benefits from visualization. Supports ASCII diagrams, Mermaid charts, and presentation slides.
 ---
-
 # Visual Preview
 
 Generate visual explanations using ASCII art, Mermaid diagrams, and structured slides.

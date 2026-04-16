@@ -18,8 +18,6 @@
     "specialists",
     "sprint-management"
   ],
-  "agents": "./agents/",
-  "skills": "./skills/",
   "hooks": "./hooks/hooks.json",
   "mcpServers": "./.mcp.json"
 }

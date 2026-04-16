@@ -2,7 +2,6 @@
 name: nlp-expert
 description: Natural Language Processing expertise from Google AI. Use when building text processing pipelines, implementing sentiment analysis, creating chatbots, working with embeddings (Word2Vec, BERT, sentence-transformers), fine-tuning language models, building search/retrieval systems, implementing named entity recognition (NER), or integrating LLM APIs for text tasks. Triggers on NLP, text processing, sentiment analysis, embeddings, tokenization, language models, or text classification.
 ---
-
 # NLP Expert - Natural Language Processing
 
 **Purpose**: Build NLP applications with text processing, embeddings, transformers, and language models

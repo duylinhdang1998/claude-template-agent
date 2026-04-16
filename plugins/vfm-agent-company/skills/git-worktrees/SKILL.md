@@ -2,7 +2,6 @@
 name: git-worktrees
 description: Use when starting feature work that needs isolation from current workspace. Creates isolated git worktrees with smart directory selection and safety verification. Use for parallel development, feature branches, experiments without affecting main workspace.
 ---
-
 # Git Worktrees
 
 ## Overview

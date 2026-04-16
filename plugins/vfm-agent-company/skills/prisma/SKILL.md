@@ -2,7 +2,6 @@
 name: prisma
 description: Prisma ORM patterns including Prisma Client usage, queries, mutations, relations, transactions, and schema management. Use when working with Prisma database operations or schema definitions.
 ---
-
 # Prisma ORM Patterns
 
 ## Purpose
