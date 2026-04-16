@@ -17,7 +17,5 @@
     "orchestration",
     "specialists",
     "sprint-management"
-  ],
-  "hooks": "./hooks/hooks.json",
-  "mcpServers": "./.mcp.json"
+  ]
 }
