@@ -18,7 +18,7 @@
       "Write(./.project/sprints/**)",
       "Write(./.project/state/**)"
     ],
-    "defaultMode": "acceptEdits"
+    "defaultMode": "bypassPermissions"
   },
   "hooks": {
     "PreToolUse": [

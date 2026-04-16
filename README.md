@@ -1,12 +1,27 @@
-# X Company
+# VFM Agent Company
 
 > An autonomous AI software company powered by Claude Code — BDD-driven development with FAANG specialists
 
 [![Claude Code](https://img.shields.io/badge/Powered%20by-Claude%20Code-blue)](https://github.com/anthropics/claude-code)
 
+## Install (Claude Code Plugin)
+
+This repo is a Claude Code **plugin marketplace**. Install with:
+
+```bash
+/plugin marketplace add duylinhdang1998/claude-template-agent
+/plugin install vfm-agent-company@vfm-agent-marketplace
+```
+
+Then start using:
+
+```bash
+/work "Build an e-commerce platform with Stripe payments"
+```
+
 ## What Is This?
 
-X Company is an **autonomous AI software company** that operates like a real tech company. It has a CEO, CTO, HR, PM, BA, and 17 elite specialists from Meta, Google, Apple, Amazon, Netflix, and Microsoft.
+VFM Agent Company is an **autonomous AI software company** that operates like a real tech company. It has a CEO, CTO, HR, PM, BA, and 17 elite specialists from Meta, Google, Apple, Amazon, Netflix, and Microsoft.
 
 ### Option 1: Run directly in Claude Code
 

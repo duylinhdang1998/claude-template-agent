@@ -1,0 +1,36 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@executeautomation/playwright-mcp-server"
+      ],
+      "description": "Browser automation and E2E testing via Playwright",
+      "env": {}
+    },
+    "figma": {
+      "url": "http://127.0.0.1:3845/sse",
+      "transport": "sse",
+      "description": "Access Figma design files and extract design specs (local SSE server)"
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
+      "description": "Enhanced reasoning through sequential thinking process",
+      "env": {}
+    },
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@context7/mcp"
+      ],
+      "description": "Access up-to-date documentation for any library/framework",
+      "env": {}
+    }
+  }
+}

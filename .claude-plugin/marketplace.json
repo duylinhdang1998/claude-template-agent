@@ -1,0 +1,36 @@
+{
+  "name": "vfm-agent-marketplace",
+  "owner": {
+    "name": "Dang Duy Linh",
+    "email": "duylinhdang1998@users.noreply.github.com"
+  },
+  "metadata": {
+    "description": "VFM Agent Company — autonomous AI software company plugin for Claude Code",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "vfm-agent-company",
+      "source": "./plugins/vfm-agent-company",
+      "description": "Autonomous AI software company with CEO/CTO/PM/HR/BA + 17 FAANG specialists, BDD-driven development, sprint orchestration, and full hook automation",
+      "version": "1.0.0",
+      "author": {
+        "name": "Dang Duy Linh"
+      },
+      "license": "MIT",
+      "keywords": [
+        "agents",
+        "agent-company",
+        "bdd",
+        "tdd",
+        "orchestration",
+        "specialists",
+        "faang",
+        "sprint-management"
+      ],
+      "category": "development",
+      "homepage": "https://github.com/duylinhdang1998/claude-template-agent",
+      "repository": "https://github.com/duylinhdang1998/claude-template-agent"
+    }
+  ]
+}
