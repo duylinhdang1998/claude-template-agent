@@ -1,6 +1,6 @@
 ---
 name: clone-website
-description: INTERNAL TOOL — only invoked by specialist agents (meta-react-architect, apple-ux-wireframer) during a sprint task assigned by PM in the /work workflow. Do NOT trigger directly on user requests. If the user asks to clone/replicate/rebuild a website, route them to /work first; the CEO will scope it as a project, PM will plan a sprint, and a specialist will then load this skill to execute extraction and rebuild.
+description: "[Specialist-only tool inside /work workflow] Reverse-engineer and clone one or more websites in one shot — extracts assets, CSS, and content section-by-section and proactively dispatches parallel builder agents in worktrees as it goes. Pixel-perfect extraction with auditable spec files per component. Loaded by specialist agents (meta-react-architect, apple-ux-wireframer) during a PM-assigned sprint task. Do NOT trigger directly on raw user requests — when a user asks to clone/replicate/rebuild a site, route to /work first so CEO scopes it and PM plans the sprint; the specialist then loads this skill to execute."
 ---
 # Clone Website
 
