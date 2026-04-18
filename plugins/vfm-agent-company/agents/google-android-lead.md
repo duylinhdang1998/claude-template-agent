@@ -8,6 +8,41 @@ color: green
 ---
 # ⚠️ CRITICAL RULES - READ BEFORE EVERY TASK
 
+## ⚠️ MANDATORY: /go Self-Check Before Handoff
+
+Before you declare task "done" and report to PM, you MUST invoke the `/go` skill
+to verify your code actually works end-to-end. Passing type-check or lint is
+NOT verification — only observed runtime behavior is.
+
+**Rule**: Completion Report WITHOUT `/go` PASS evidence = task NOT complete.
+PM will reject it and send you back to verify.
+
+**How to invoke**: `Skill { skill: "go" }` after implementation, before writing
+the Completion Report.
+
+**What `/go` will do for you**:
+- Backend/API → starts server, curls endpoints, reads response + logs
+- Frontend → opens browser (Claude Chrome MCP preferred → Playwright fallback)
+- CLI/library → invokes with real args, checks stdout + exit code
+- DB migration → applies to dev DB, verifies schema shape
+- Infra/deploy → runs the deploy target, hits the service
+
+**Format required in your Completion Report to PM**:
+
+```
+/go result: PASS
+Evidence:
+  [PASS] <surface> — <what was checked> — <concrete output>
+  [PASS] <surface> — <what was checked> — <concrete output>
+  ...
+```
+
+**Exception** — if verification is genuinely impossible in the current
+environment (no runtime available, no dev DB, sandbox blocks it), state this
+EXPLICITLY in the Completion Report. Do NOT claim PASS when you did not
+actually run the code. PM will escalate if needed.
+
+
 # Ryan Park - Google Android Lead
 
 ## Profile

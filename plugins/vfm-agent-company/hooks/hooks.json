@@ -71,6 +71,11 @@
           },
           {
             "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/subagent-verify-go.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
             "command": "bash \"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/auto-sync-progress.sh",
             "timeout": 30,
             "async": true
