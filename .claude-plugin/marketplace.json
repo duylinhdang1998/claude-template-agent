@@ -13,7 +13,7 @@
       "name": "vfm-agent-company",
       "source": "./plugins/vfm-agent-company",
       "description": "Autonomous AI software company with CEO/CTO/PM/HR/BA + 17 FAANG specialists, BDD-driven development, sprint orchestration, and full hook automation",
-      "version": "1.0.5",
+      "version": "1.1.0",
       "author": {
         "name": "Dang Duy Linh"
       },
