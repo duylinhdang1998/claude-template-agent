@@ -1,7 +1,7 @@
 {
   "name": "vfm-agent-company",
   "description": "Autonomous AI software company with CEO/CTO/PM/HR/BA + 17 FAANG specialists. BDD-driven development with sprint orchestration, validation gates, and Git auto-checkpointing.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "author": {
     "name": "Dang Duy Linh",
     "email": "duylinhdang1998@users.noreply.github.com"

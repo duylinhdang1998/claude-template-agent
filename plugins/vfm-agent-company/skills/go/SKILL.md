@@ -39,7 +39,7 @@ Determine *what kind* of thing was built/changed. Inspect the diff and the proje
 | Routes, controllers, handlers, `server.listen`, API endpoints, `app.get/post`, FastAPI/Flask/Express/Nest/Fastify/Rails/Django | **Backend HTTP** | Bash (start server → curl / httpie) |
 | CLI entry point, `bin/`, `#!/usr/bin/env ...`, `argparse`, `commander`, `cobra`, `clap` | **CLI** | Bash (invoke with args, read stdout/exit code) |
 | Pure library/package (exports but no entry) | **Library** | Bash (run the project's test suite; write a tiny eval script if no tests cover the change) |
-| `.tsx` / `.vue` / `.svelte` / React components / Next.js pages / route files under `app/` or `pages/` | **Web frontend** | Playwright MCP or Claude Chromium extension |
+| `.tsx` / `.vue` / `.svelte` / React components / Next.js pages / route files under `app/` or `pages/` | **Web frontend** | Claude Chrome MCP (preferred) → Playwright MCP (fallback) — see Step 3d |
 | Electron, Tauri, native iOS/Android, native macOS/Windows app | **Desktop / native** | computer-use MCP |
 | DB migration, schema change | **Database** | Bash (apply migration to dev DB, run a SELECT to confirm shape) |
 | Smart contract | **Blockchain** | Bash (hardhat/foundry test + local-chain deploy) |
@@ -79,15 +79,22 @@ Before running anything:
 
 #### 3d — Web frontend
 
-Use Playwright MCP (`mcp__plugin_playwright_playwright__*`) or the Claude Chromium extension. Load schemas via ToolSearch if needed.
+**Pick the browser tool by strict priority:**
+
+1. **Claude Chrome MCP** (`mcp__Claude_in_Chrome__*`) — PREFERRED. Drives the user's real browser via the Claude Chromium extension. Check availability via `ToolSearch { query: "Claude_in_Chrome", max_results: 20 }`. If matches return and the extension is connected, use this tier.
+2. **Playwright MCP** (`mcp__plugin_playwright_playwright__browser_*`) — FALLBACK only if Tier 1 is unavailable (extension not installed / not connected), or if the verification must be headless and independent of the user's session.
+
+Once a tool is selected, run:
 
 1. Start the dev server (`npm run dev` / `pnpm dev` / framework equivalent) in the background.
 2. Navigate to the affected route.
-3. Take a snapshot (accessibility tree) — confirm the changed component renders.
+3. Take a snapshot (accessibility tree / DOM) — confirm the changed component renders.
 4. Interact with it: click the button that was added, fill the form that was changed, trigger the state that was fixed.
-5. Take a screenshot and read the console messages (`browser_console_messages`) and network log (`browser_network_requests`).
+5. Take a screenshot and read the console messages and network log (tool-specific: `browser_console_messages` / `browser_network_requests` in Playwright MCP; Chrome MCP equivalents via its batch tools).
 6. If the change is cross-viewport, resize (desktop 1440, mobile 375) and re-check.
 7. Flag any console errors, failed network requests, or visual regressions.
+
+**Record which tier was used in the evidence line** (e.g., `[PASS] frontend (chrome-mcp) — /checkout submit — ...`) so the report reflects whether verification ran against a real user session or a headless instance.
 
 #### 3e — Desktop / native
 

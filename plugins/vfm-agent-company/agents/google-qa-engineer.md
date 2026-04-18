@@ -17,12 +17,6 @@ color: purple
 cd src
 npm test                    # Run all tests
 npm test -- --coverage      # With coverage report
-
-# E2E tests (Playwright)
-npx playwright install chromium  # First time only
-npx playwright test              # Run E2E tests
-npx playwright test --headed     # With browser visible
-npx playwright show-report       # View HTML report
 ```
 
 **Task is NOT complete until:**
@@ -30,20 +24,53 @@ npx playwright show-report       # View HTML report
 - [ ] Tests are EXECUTED
 - [ ] All tests PASS (or failures documented)
 - [ ] Coverage meets target (≥80%)
-- [ ] Visual UI check done (if UI changes — use Playwright MCP)
+- [ ] Visual UI check done (if UI changes — see Browser Testing Priority below)
 
-## VISUAL UI CHECK (for sprints with UI changes)
+## 🌐 BROWSER TESTING — TOOL PRIORITY (pick in this order)
 
-Use Playwright MCP tools to visually verify UI:
+When the task involves clicking, navigating, screenshotting, or verifying real browser behaviour, select the tool by this **strict priority order**:
 
+### Tier 1 — Claude Chrome MCP (PREFERRED)
+Tools named `mcp__Claude_in_Chrome__*` (the Claude Chromium extension controlling the user's real browser).
+
+**Why first**: reuses the user's live session (cookies, auth, extensions), zero headless startup cost, best for interactive smoke tests and visual spot-checks during development.
+
+**Availability check**: if tools are deferred, load via `ToolSearch { query: "Claude_in_Chrome", max_results: 20 }`. If zero matches return AND the extension is not reported as connected, this tier is unavailable — fall through to Tier 2. **Do not skip the check** — you do not know availability without looking.
+
+### Tier 2 — Playwright MCP (FALLBACK)
+Tools named `mcp__plugin_playwright_playwright__browser_*`. Headless, scriptable, works without the Chromium extension.
+
+**Use when**: Tier 1 is unavailable, OR the task explicitly needs a headless/reproducible run that must not depend on the user's browser state.
+
+### Tier 3 — `npx playwright test` (CI GATE — always required)
+Regardless of which MCP was used during interactive development, the **committed E2E test suite** in `tests/e2e/` (or equivalent) MUST be run via the Playwright CLI before sprint close.
+
+```bash
+npx playwright install chromium  # First time only
+npx playwright test              # Run E2E tests
+npx playwright test --headed     # With browser visible (debugging)
+npx playwright show-report       # View HTML report
 ```
-1. browser_navigate → open each page/screen
-2. browser_take_screenshot → capture current state
+
+**Rule**: MCPs are for interactive verification; the CLI is the gate. A sprint does not close on MCP screenshots alone.
+
+### Decision table
+
+| Goal | Tool |
+|---|---|
+| "Does this new button click work right now?" | Tier 1 (Chrome MCP), fall back to Tier 2 |
+| "Screenshot checkout page at mobile width" | Tier 1, fall back to Tier 2 |
+| "Is the CI E2E suite green?" | Tier 3 (playwright CLI) — always |
+| "Headless reproducible run in an automated script" | Tier 2 (Playwright MCP) |
+
+### Visual UI check steps (works with Tier 1 or Tier 2)
+
+1. `browser_navigate` → open each page/screen
+2. `browser_take_screenshot` → capture current state
 3. Analyze screenshot: layout, overflow, alignment, spacing
-4. browser_resize → test responsive (mobile/tablet/desktop)
-5. browser_take_screenshot → capture responsive state
+4. `browser_resize` → test responsive (mobile / tablet / desktop)
+5. `browser_take_screenshot` → capture responsive state
 6. Report visual issues with screenshot evidence
-```
 
 Check for: overflow, misalignment, text cut-off, broken responsive, wrong colors/spacing, missing loading/error/empty states.
 

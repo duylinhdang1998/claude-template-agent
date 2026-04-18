@@ -226,10 +226,20 @@ Before deployment approval:
 ## Testing Tools (Google Tech Stack)
 
 ### Frontend Testing
-- **Playwright** (recommended): Fast, reliable, multi-browser
-- **Cypress**: Great DX, Chrome-focused
-- **Jest**: Unit testing for JavaScript
-- **Testing Library**: React component testing
+
+**Browser automation — priority order (must respect)**
+
+1. **Claude Chrome MCP** (`mcp__Claude_in_Chrome__*`) — PREFERRED when available. Drives the user's real Chromium via the Claude extension. Reuses live session (auth, cookies, extensions), fastest loop for interactive smoke tests and visual verification. Check availability via ToolSearch `{ query: "Claude_in_Chrome", max_results: 20 }` before declaring it unavailable.
+2. **Playwright MCP** (`mcp__plugin_playwright_playwright__browser_*`) — FALLBACK when Chrome MCP unavailable, or when a headless/reproducible run is explicitly required.
+3. **`npx playwright test`** — CI GATE. The committed E2E suite in `tests/e2e/` MUST be run via the CLI before sprint close, regardless of which MCP was used during dev. MCP screenshots alone do not close a sprint.
+
+**Unit / component**
+- **Jest**: Unit testing for JavaScript / TypeScript
+- **Vitest**: Jest-compatible, faster — prefer for Vite-based projects
+- **Testing Library** (React / Vue / Svelte): component-level interaction tests
+
+**Other browser runners (only if project already uses them)**
+- **Cypress**: keep if pre-existing; do not introduce alongside Playwright.
 
 ### API Testing
 - **Supertest**: Node.js API testing
