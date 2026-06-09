@@ -52,7 +52,7 @@ Senior Code Reviewer at Google, 10+ years, reviewed 10K+ CLs. Expert in code qua
 
 Without loading tech-specific skills, you CANNOT catch framework anti-patterns.
 
-## Review Checklist (6 areas — ALL mandatory)
+## Review Checklist (7 areas — ALL mandatory)
 
 ### 1. Architecture Compliance
 - Read `.project/documentation/architecture.md` → File Blueprint section
@@ -61,6 +61,21 @@ Without loading tech-specific skills, you CANNOT catch framework anti-patterns.
 - 1 file = 1 responsibility (SRP)? No god files (>300 lines)?
 - Domain grouping correct? (tree/, member/, NOT components/buttons/)
 - No files created outside Blueprint without CTO approval?
+
+### 1b. Frontend Code Standards (React/Next.js + Tailwind)
+- Read `helpers/code-quality.md` → "Frontend Code Standards" (the 4 rules). For each:
+- **One component per file** — 🔴 flag any file that defines/exports more than one
+  component. Sub-components defined inline below the main one = violation.
+- **Design system compliance** — uses design tokens (colors, type scale, spacing,
+  radius, shadows) from the design reference? 🟡 flag ad-hoc hex colors, arbitrary
+  `px` spacing, or one-off font sizes that bypass the system.
+- **Shared logic extracted** — 🟡 flag duplicated helpers, reusable logic buried in a
+  component, or shared utils/hooks not split into their own file (`lib/`/`utils/`,
+  `hooks/use-*.ts`, one concern per file).
+- **No static inline styles** — 🔴 flag `style={}` with static values; allowed ONLY
+  when the value is dynamic (computed from a variable at runtime). Static styling
+  MUST use existing Tailwind utility classes; flag arbitrary values when a token
+  class exists.
 
 ### 2. Code Quality
 - Read `helpers/code-quality.md` for rules
@@ -91,7 +106,7 @@ Without loading tech-specific skills, you CANNOT catch framework anti-patterns.
 ## Review Output Format
 
 Returns one of:
-- **LGTM** — all 6 areas pass
+- **LGTM** — all 7 areas pass
 - **NEEDS MINOR** — small fixes (naming, missing memo, minor DRY)
 - **NEEDS MAJOR** — architecture violations, security issues, missing tests, SRP violations
 

@@ -52,3 +52,28 @@
 - Fix the root cause, not the symptom
 - Add a test that would have caught the bug
 - Check for the same pattern elsewhere in the codebase
+
+## Frontend Code Standards (React/Next.js + Tailwind)
+
+**These four rules are MANDATORY for every frontend file. They are authored by
+`meta-react-architect` and enforced by `google-code-reviewer`.**
+
+| # | Rule | Do | Don't |
+|---|------|----|----|
+| **1** | **One component per file** | Each file exports exactly ONE component. Sub-components, even small ones, get their own file. File name = component name (PascalCase). | ❌ Two+ `export function`/`export const` components in the same file. ❌ Defining helper components below the main one. |
+| **2** | **Follow the project design system** | Use the project's design tokens, primitives, and patterns (colors, typography, spacing, radius, shadows). Read the design system reference (e.g. `clone-ui-design` skill / `references/DESIGN.md` / `design-system.md`) BEFORE writing UI. | ❌ Ad-hoc hex colors, arbitrary `px` spacing, one-off font sizes that bypass the system. |
+| **3** | **Extract shared logic to its own file** | Shared functions → `lib/` or `utils/` (one concern per file). Shared stateful logic → `hooks/use-*.ts` (one hook per file). Shared UI → reusable component file. Clean separation, named for intent, reusable. | ❌ Copy-pasting the same helper into multiple components. ❌ Burying reusable logic inside a component. |
+| **4** | **No inline styles unless value is dynamic** | Use existing Tailwind utility classes for all static styling. Inline `style={}` is allowed ONLY when the value is computed at runtime from a variable (e.g. `style={{ width: \`${percent}%\` }}`, `style={{ transform: \`translateX(${x}px)\` }}`). | ❌ `style={{ color: 'red', padding: '8px' }}` for static values. ❌ Arbitrary Tailwind values when a token class exists. |
+
+### Quick reference — Rule 4 (inline style)
+
+```tsx
+// ❌ WRONG — static values as inline style
+<div style={{ marginTop: '16px', backgroundColor: '#1e293b' }} />
+
+// ✅ RIGHT — Tailwind utility classes for static styling
+<div className="mt-4 bg-slate-800" />
+
+// ✅ ALLOWED — value is dynamic (driven by a variable), Tailwind can't express it
+<div className="h-2 rounded bg-blue-500" style={{ width: `${progress}%` }} />
+```
