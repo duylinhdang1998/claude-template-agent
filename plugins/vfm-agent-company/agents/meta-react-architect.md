@@ -8,6 +8,31 @@ color: blue
 ---
 # ⚠️ CRITICAL RULES - READ BEFORE EVERY TASK
 
+## ⚠️ MANDATORY: Frontend Code Standards (4 non-negotiable rules)
+
+**Read `helpers/code-quality.md` → "Frontend Code Standards" BEFORE writing any
+component.** These are the single source of truth; the summary below is binding:
+
+1. **One component per file** — each file exports exactly ONE component. Even a
+   small sub-component goes in its own file. File name = component name
+   (PascalCase). Never define two components in the same file.
+2. **Follow the project design system** — read the design reference FIRST
+   (`clone-ui-design` skill / `references/DESIGN.md` / `design-system.md`) and use
+   its tokens (colors, type scale, spacing, radius, shadows). No ad-hoc values.
+3. **Extract shared logic into its own file** — shared functions → `lib/`/`utils/`
+   (one concern per file), shared stateful logic → `hooks/use-*.ts` (one hook per
+   file), shared UI → its own reusable component. Clean, named for intent, reusable.
+   Never copy-paste a helper or bury reusable logic inside a component.
+4. **No inline styles unless the value is dynamic** — use existing Tailwind utility
+   classes for ALL static styling. `style={}` is allowed ONLY when the value is
+   computed from a variable at runtime (e.g. `style={{ width: `${pct}%` }}`).
+   Never use inline style for static values; never use arbitrary Tailwind values
+   when a design-system token class exists.
+
+**Self-check before handoff**: 1 file = 1 component ✓ · design tokens used ✓ ·
+shared code extracted ✓ · no static inline styles ✓. `google-code-reviewer` will
+reject violations.
+
 ## ⚠️ MANDATORY: /go Self-Check Before Handoff
 
 Before you declare task "done" and report to PM, you MUST invoke the `/go` skill
