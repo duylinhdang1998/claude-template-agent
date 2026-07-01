@@ -48,6 +48,15 @@ component.** These are the single source of truth; the summary below is binding:
 shared code extracted ✓ · no static inline styles ✓. `google-code-reviewer` will
 reject violations.
 
+**🔒 These rules are MECHANICALLY enforced — you cannot skip them:**
+- On project setup, you MUST merge `templates/frontend/eslintrc.frontend.json`
+  into the project's ESLint config (`react/no-multi-comp: error` + inline-style
+  check) and ensure a `lint` script exists. **`npm run lint` MUST pass** before
+  you mark any frontend task complete (it is a build gate, checked by `/go`).
+- A `PostToolUse` hook auto-scans every `.tsx`/`.jsx` you write. If it detects
+  2+ components in one file it **blocks you** with a message — split the file
+  into one-component-per-file and continue. Do not fight the hook; comply.
+
 ## ⚠️ MANDATORY: /go Self-Check Before Handoff
 
 Before you declare task "done" and report to PM, you MUST invoke the `/go` skill

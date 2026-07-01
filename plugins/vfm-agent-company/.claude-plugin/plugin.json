@@ -1,7 +1,7 @@
 {
   "name": "vfm-agent-company",
-  "description": "Autonomous AI software company with CEO/CTO/PM/HR/BA + 17 FAANG specialists. BDD-driven development with sprint orchestration, validation gates, and Git auto-checkpointing.",
-  "version": "1.4.0",
+  "description": "Autonomous AI software company with CEO/CTO/PM/HR/BA + 17 FAANG specialists and a Google/Ahrefs/DataForSEO SEO division (18 SEO sub-agents + 25 SEO skills). BDD-driven development, sprint orchestration, mechanically-enforced frontend code standards (one-component-per-file hook + ESLint gate), validation gates, and Git auto-checkpointing.",
+  "version": "1.6.0",
   "author": {
     "name": "Dang Duy Linh",
     "email": "duylinhdang1998@users.noreply.github.com"
@@ -16,6 +16,13 @@
     "tdd",
     "orchestration",
     "specialists",
-    "sprint-management"
+    "sprint-management",
+    "seo",
+    "technical-seo",
+    "schema-markup",
+    "core-web-vitals",
+    "geo",
+    "local-seo",
+    "backlinks"
   ]
 }

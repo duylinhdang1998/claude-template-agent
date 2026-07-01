@@ -345,6 +345,33 @@ Pre-configured agents from **Meta, Google, Apple, Amazon, Netflix, Microsoft** c
 
 Every project automatically includes: `google-code-reviewer` (Batch 2), `google-qa-engineer` (Batch 0 + 3), and `netflix-devops-engineer` (Phase 5-6).
 
+### SEO Division (18 SEO specialists + 25 SEO skills)
+
+Integrated from [claude-seo](https://github.com/AgricIDaniel/claude-seo) and rebranded into the company's persona convention. A full SEO toolset for technical SEO, content quality (E-E-A-T), Schema.org, Core Web Vitals, local/maps SEO, backlinks, GEO/AI-search, e-commerce, and Google API (GSC/CrUX/GA4) analysis.
+
+| Agent | Focus |
+|-------|-------|
+| `google-seo-technical-lead` | Crawlability, indexability, security, CWV, JS rendering |
+| `google-seo-content-strategist` | E-E-A-T, readability, thin content, AI citation readiness |
+| `google-seo-schema-architect` | Schema.org detection, validation, JSON-LD generation |
+| `google-seo-sitemap-architect` | XML sitemap validation + generation |
+| `google-seo-performance-engineer` | Core Web Vitals (LCP/INP/CLS) measurement |
+| `google-seo-visual-analyst` | Screenshots, mobile rendering, above-the-fold |
+| `google-seo-geo-strategist` | AI Overviews / ChatGPT / Perplexity optimization |
+| `google-seo-local-specialist` | GBP, NAP consistency, citations, local schema |
+| `google-seo-maps-specialist` | Geo-grid rank tracking, review intelligence |
+| `google-search-console-analyst` | GSC, CrUX field data, GA4 organic traffic |
+| `google-seo-cluster-strategist` | SERP-based semantic topic clustering |
+| `google-seo-flow-analyst` | FLOW framework (Find→Leverage→Optimize→Win) |
+| `google-seo-sxo-specialist` | Search Experience Optimization, intent matching |
+| `google-seo-drift-monitor` | SEO regression / drift baseline tracking |
+| `google-seo-ecommerce-specialist` | Product schema, Google Shopping intelligence |
+| `google-seo-image-strategist` | Image/OG audit + AI generation plan |
+| `ahrefs-backlinks-analyst` | Backlink profile, toxic links, link-gap analysis |
+| `dataforseo-data-analyst` | Live SERP, keyword, backlink data (MCP extension) |
+
+The `seo` orchestrator skill runs a full parallel audit (`/seo audit <url>`), delegating to these specialists and producing an SEO Health Score (0–100). Optional MCP extensions live under `plugins/vfm-agent-company/extensions/` (DataForSEO, Ahrefs, Firecrawl, Banana, SE Ranking, Profound, Bing Webmaster, Unlighthouse). Python tooling under `scripts/` requires `pip install -r requirements.txt`.
+
 ### Dynamic Hiring
 
 **The system is not limited to 17 specialists.** When a project requires a technology not covered by existing agents, HR detects the gap and creates a new specialist — complete with its own agent file, domain skill, and up-to-date knowledge.
