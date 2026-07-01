@@ -18,6 +18,11 @@
         "hooks": [
           {
             "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/enforce-frontend-standards.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
             "command": "bash \"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/validate-sprint-on-edit.sh",
             "timeout": 10
           },
@@ -26,6 +31,20 @@
             "command": "bash \"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/auto-commit-milestone.sh",
             "timeout": 15,
             "async": true
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": [
+              "${CLAUDE_PLUGIN_ROOT}/hooks/run-python-hook.js",
+              "${CLAUDE_PLUGIN_ROOT}/hooks/validate-schema.py",
+              "${tool_input.file_path}"
+            ]
           }
         ]
       }

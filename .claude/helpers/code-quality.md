@@ -58,6 +58,20 @@
 **These four rules are MANDATORY for every frontend file. They are authored by
 `meta-react-architect` and enforced by `google-code-reviewer`.**
 
+### 🔒 Enforcement (three layers — NOT just prose)
+
+1. **Automatic hook (hard gate for Rule #1)** — a `PostToolUse` hook
+   (`hooks/enforce-frontend-standards.sh`) scans every `.tsx`/`.jsx` file on
+   write. If it finds 2+ components in one file, it **blocks with a violation
+   message** and the developer agent MUST split the file before continuing.
+2. **ESLint build gate (Rules #1 + #4)** — every React/Next project MUST include
+   the rules in `templates/frontend/eslintrc.frontend.json`
+   (`react/no-multi-comp: error` + static-inline-style check). `npm run lint`
+   MUST pass before a frontend task is marked complete. The dev agent adds these
+   rules to the project's ESLint config during scaffolding.
+3. **Code review (all 4 rules)** — `google-code-reviewer` grades Rule #1 and #4
+   violations as 🔴 **NEEDS MAJOR** (blocking), Rule #2/#3 as 🟡.
+
 | # | Rule | Do | Don't |
 |---|------|----|----|
 | **1** | **One component per file** | Each file exports exactly ONE component. Sub-components, even small ones, get their own file. File name = component name (PascalCase). | ❌ Two+ `export function`/`export const` components in the same file. ❌ Defining helper components below the main one. |

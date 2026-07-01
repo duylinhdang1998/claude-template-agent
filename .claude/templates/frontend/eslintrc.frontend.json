@@ -1,0 +1,14 @@
+{
+  "//": "VFM Frontend Code Standards — MANDATORY build gate. Merge these rules into the project's ESLint config (.eslintrc.json / eslint.config.*). `npm run lint` MUST pass before a frontend task is marked complete. See helpers/code-quality.md → 'Frontend Code Standards'.",
+  "plugins": ["react"],
+  "rules": {
+    "react/no-multi-comp": ["error", { "ignoreStateless": false }],
+    "no-restricted-syntax": [
+      "warn",
+      {
+        "selector": "JSXAttribute[name.name='style'] > JSXExpressionContainer > ObjectExpression:not(:has(Identifier)):not(:has(TemplateLiteral)):not(:has(MemberExpression))",
+        "message": "Rule #4: no STATIC inline styles. Use a Tailwind utility class. style={} is allowed ONLY when the value is computed from a variable at runtime."
+      }
+    ]
+  }
+}
