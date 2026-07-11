@@ -1,0 +1,41 @@
+# ============================================================================
+# VFM Agent Company — MCP servers for Codex CLI (SEO division)
+# ============================================================================
+# Paste these blocks into ~/.codex/config.toml (global) or <project>/.codex/config.toml
+# and fill in the API keys. Each server is OPTIONAL — only add the ones you use.
+#
+# Codex reads MCP servers from config.toml under [mcp_servers.<name>] tables.
+# Docs: https://developers.openai.com/codex/mcp
+#
+# The installer (codex/install.sh) copies this file to
+#   ~/.codex/config.toml.vfm-mcp-snippet
+# and does NOT modify your existing config.toml. Merge manually so your keys stay safe.
+# ============================================================================
+
+# --- DataForSEO: live SERP, keywords, backlinks, on-page, AI visibility ------
+[mcp_servers.dataforseo]
+command = "npx"
+args = ["-y", "dataforseo-mcp-server@2.8.10"]
+startup_timeout_sec = 60
+env = { DATAFORSEO_USERNAME = "YOUR_DATAFORSEO_USERNAME", DATAFORSEO_PASSWORD = "YOUR_DATAFORSEO_PASSWORD", ENABLED_MODULES = "SERP,KEYWORDS_DATA,ONPAGE,DATAFORSEO_LABS,BACKLINKS,DOMAIN_ANALYTICS,BUSINESS_DATA,CONTENT_ANALYSIS,AI_OPTIMIZATION", FIELD_CONFIG_PATH = "" }
+
+# --- Ahrefs: backlink profile, referring domains, anchor text ----------------
+[mcp_servers.ahrefs]
+command = "npx"
+args = ["--yes", "--package=@ahrefs/mcp@0.0.11", "mcp"]
+startup_timeout_sec = 60
+env = { AHREFS_API_TOKEN = "YOUR_AHREFS_API_TOKEN" }
+
+# --- Firecrawl: crawl, map, scrape, search -----------------------------------
+[mcp_servers.firecrawl-mcp]
+command = "npx"
+args = ["-y", "firecrawl-mcp@3.11.0"]
+startup_timeout_sec = 60
+env = { FIRECRAWL_API_KEY = "YOUR_FIRECRAWL_API_KEY" }
+
+# --- Nanobanana (Gemini): AI image generation for SEO/OG assets --------------
+[mcp_servers.nanobanana-mcp]
+command = "npx"
+args = ["-y", "@ycse/nanobanana-mcp@1.1.1"]
+startup_timeout_sec = 60
+env = { GOOGLE_AI_API_KEY = "YOUR_GOOGLE_AI_API_KEY" }

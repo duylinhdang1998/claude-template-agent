@@ -19,6 +19,34 @@ Then start using:
 /work "Build an e-commerce platform with Stripe payments"
 ```
 
+## Install (Codex CLI)
+
+The company also runs on **OpenAI Codex CLI**. One generator (`codex/build.py`) converts the
+Claude sources into Codex-native **skills** + an `AGENTS.md` operating manual — `.claude/`
+stays the single source of truth.
+
+```bash
+# clone this repo, then from its root:
+bash codex/install.sh                 # global  → ~/.codex (available in every project)
+bash codex/install.sh --project .     # project → ./.agents/skills + ./AGENTS.md
+# Windows:
+powershell -ExecutionPolicy Bypass -File codex\install.ps1
+```
+
+The installer builds `codex/dist/` on the fly (needs Python 3), copies all **110 skills**
+(76 topic skills + 34 FAANG/SEO specialists + the `work` entrypoint), merges the operating
+manual into `AGENTS.md` (your own content is preserved), and drops an optional SEO
+`config.toml.vfm-mcp-snippet`. Then, inside Codex:
+
+```
+/work "Build an e-commerce platform with Stripe payments"
+```
+
+> **Codex is single-agent** — it has no parallel subagent spawning. The port maps each
+> specialist to a Codex skill that the one agent **adopts as a persona, sequentially**.
+> Full details, trade-offs, and the MCP setup are in [`codex/README.md`](codex/README.md).
+> Uninstall anytime: `bash codex/install.sh --uninstall`.
+
 ## What Is This?
 
 VFM Agent Company is an **autonomous AI software company** that operates like a real tech company. It has a CEO, CTO, HR, PM, BA, and 17 elite specialists from Meta, Google, Apple, Amazon, Netflix, and Microsoft.

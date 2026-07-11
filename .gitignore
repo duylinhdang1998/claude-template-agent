@@ -44,6 +44,10 @@ npm-debug.log*
 .claude/monitor/state/
 .agent/
 
+# Codex port — generated distribution (rebuilt by codex/install.sh via codex/build.py)
+# (already covered by the generic dist/ rule above; listed here for clarity)
+codex/dist/
+
 # Misc
 .release-it.json
 # Python bytecode
