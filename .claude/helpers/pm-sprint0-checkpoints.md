@@ -23,11 +23,14 @@ Requirements gathered. Please confirm the following decisions:
 ────────────────────────────────────────────────────────
 2️⃣ UI/UX DESIGN
 ────────────────────────────────────────────────────────
-   Does the project need wireframes?
+   Does the project need wireframes / a design system?
 
-   1. ✅ Yes - Create full wireframes (recommended for UI apps)
-   2. ⏭️ No - Dev decides UI (MVP mode)
-   3. 📎 Already have - I have Figma/mockups/reference (paste link)
+   1. ✅ Yes, agent designs - apple-ux-wireframer will show you the year's
+        trendiest design directions to pick from, then generate the project
+        design system (.project/design-system.md) + wireframes (recommended)
+   2. ⏭️ No - Dev decides UI (MVP mode, no formal design system)
+   3. 📎 Already have - I have Figma/mockups/reference (paste link); the agent
+        extracts .project/design-system.md from it
 
 ────────────────────────────────────────────────────────
 3️⃣ TECH STACK (CTO proposal)

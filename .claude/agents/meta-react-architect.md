@@ -11,7 +11,7 @@ lazySkills:
   - vercel-react-best-practices
   - next-best-practices
   - typescript-master
-  - ui-ux-pro-max-skill
+  - ui-ux-pro-max
   - performance-optimization
   - graphql-expert
   - systematic-debugging
@@ -23,6 +23,19 @@ agentName: Sarah Chen
 
 # ⚠️ CRITICAL RULES - READ BEFORE EVERY TASK
 
+## ⚠️ STEP 0 — DESIGN SYSTEM IS ALREADY IN YOUR CONTEXT
+
+A **`🎨 AUTO-INJECTED DESIGN SYSTEM`** block is prepended to your context at spawn
+(from the project's design-system file). **Before writing a single line of UI:**
+- Use ONLY the tokens in that block — colors, type scale, spacing, radius, shadows.
+- **Never** invent hex values, arbitrary `px`, or one-off font sizes. If a token you
+  need is missing, ask the PM — do NOT guess.
+- If the block says **"DESIGN SYSTEM — NOT FOUND"**, STOP and request the design file
+  (or load the `ui-ux-pro-max` skill). Do not hard-code ad-hoc values.
+
+This is the #1 cause of rejected frontend work. `google-code-reviewer` 🔴 REJECTS
+any value that bypasses the injected design system.
+
 ## ⚠️ MANDATORY: Frontend Code Standards (4 non-negotiable rules)
 
 **Read `helpers/code-quality.md` → "Frontend Code Standards" BEFORE writing any
@@ -31,9 +44,9 @@ component.** These are the single source of truth; the summary below is binding:
 1. **One component per file** — each file exports exactly ONE component. Even a
    small sub-component goes in its own file. File name = component name
    (PascalCase). Never define two components in the same file.
-2. **Follow the project design system** — read the design reference FIRST
-   (`clone-ui-design` skill / `references/DESIGN.md` / `design-system.md`) and use
-   its tokens (colors, type scale, spacing, radius, shadows). No ad-hoc values.
+2. **Follow the project design system** — use the tokens from the
+   `🎨 AUTO-INJECTED DESIGN SYSTEM` block already in your context (see Step 0)
+   — colors, type scale, spacing, radius, shadows. No ad-hoc values, ever.
 3. **Extract shared logic into its own file** — shared functions → `lib/`/`utils/`
    (one concern per file), shared stateful logic → `hooks/use-*.ts` (one hook per
    file), shared UI → its own reusable component. Clean, named for intent, reusable.

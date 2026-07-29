@@ -27,7 +27,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "@context7/mcp"
+        "@upstash/context7-mcp"
       ],
       "description": "Access up-to-date documentation for any library/framework",
       "env": {}
