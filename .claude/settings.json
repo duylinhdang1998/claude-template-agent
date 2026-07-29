@@ -67,12 +67,14 @@
           {
             "type": "command",
             "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/automation/validate-sprint-format.sh",
-            "timeout": 5
+            "timeout": 5,
+            "async": true
           },
           {
             "type": "command",
             "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/monitor/hooks/track-subagent-start.sh",
-            "timeout": 5
+            "timeout": 5,
+            "async": true
           },
           {
             "type": "command",
@@ -133,7 +135,8 @@
           {
             "type": "command",
             "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/auto-sync-progress.sh",
-            "timeout": 30
+            "timeout": 30,
+            "async": true
           },
           {
             "type": "command",
@@ -161,16 +164,6 @@
     "ui-ux-pro-max@ui-ux-pro-max-skill": true
   },
   "mcpServers": {
-    "playwright": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@executeautomation/playwright-mcp-server"
-      ],
-      "description": "Browser automation and E2E testing via Playwright",
-      "env": {},
-      "disabled": false
-    },
     "figma": {
       "url": "http://127.0.0.1:3845/sse",
       "transport": "sse",
@@ -191,7 +184,7 @@
       "command": "npx",
       "args": [
         "-y",
-        "@context7/mcp"
+        "@upstash/context7-mcp"
       ],
       "description": "Access up-to-date documentation for any library/framework",
       "env": {},

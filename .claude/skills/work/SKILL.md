@@ -42,7 +42,8 @@ Phase 2: Sprint 0 (Planning - No Code)
 │       └── Team: OK / Modify?
 ├── 7. 🏗️ [CTO] → Read core/cto.md → (if user confirms) Finalize tech-stack.md
 ├── 8. 👥 [HR] → Read core/hr.md → (if user confirms) Finalize team.md + VERIFICATION
-├── 9. 🎨 [UX] → (if user chose wireframes) Spawn apple-ux-wireframer
+├── 9. 🎨 [UX] → (if agent designs) Spawn apple-ux-wireframer → present trendy
+│       design directions → user picks → generate .project/design-system.md + wireframes
 └── 10. 📋 [PM] → Read core/pm.md → Phase Gate 1 Check → Sprint 1 Plan
 
 Phase 3: Development (Sprint 1+)

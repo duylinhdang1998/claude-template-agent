@@ -118,9 +118,9 @@ Edit `.project/state/pm-tracker.md`: Sprint 0 Decisions (wireframes, tech stack,
 
 | Decision | User Choice | PM Action |
 |----------|-------------|-----------|
-| Wireframes = Yes | User chose 1 | Spawn `apple-ux-wireframer` |
-| Wireframes = No | User chose 2 | Skip wireframes, proceed to Sprint 1 |
-| Wireframes = External | User chose 3 | Save link to `.project/wireframes/external-design.md` |
+| Wireframes = Yes (agent designs) | User chose 1 | Spawn `apple-ux-wireframer` — instruct it to run **Phase 0**: present the year's trendiest design directions (`AskUserQuestion`), then generate `.project/design-system.md` (concrete tokens) BEFORE wireframes |
+| Wireframes = No | User chose 2 | Skip wireframes/design system, proceed to Sprint 1 (dev decides UI) |
+| Wireframes = External | User chose 3 | Save link to `.project/wireframes/external-design.md`, then spawn `apple-ux-wireframer` to extract `.project/design-system.md` from it |
 | Tech Stack change | User specified | Update `.project/documentation/tech-stack.md` |
 | Team change | User specified | Adjust team composition |
 
@@ -139,8 +139,11 @@ Edit `.project/state/pm-tracker.md`: Project Timeline (all sprints), Team Status
 ### Step 5: Gate 1 Check (Conditional)
 
 Gate 1 check is **conditional** based on checkpoint decisions:
-- If `Wireframes = Yes` → require `.project/wireframes/*.md`
-- If `Wireframes = No/External` → wireframes NOT required
+- If `Wireframes = Yes` → require `.project/wireframes/*.md` **AND**
+  `.project/design-system.md` (concrete tokens — the frontend contract)
+- If `Wireframes = External` → require `.project/design-system.md` (extracted from
+  the external design); wireframes not required
+- If `Wireframes = No` → neither required
 - All sprint plans must exist → `.project/sprints/sprint-*.md`
 - User must have approved full roadmap
 

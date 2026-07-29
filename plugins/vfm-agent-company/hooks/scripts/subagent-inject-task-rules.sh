@@ -14,6 +14,11 @@
 
 INPUT=$(cat)
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+# Prefer the user's project dir (set for all hooks; correct in both local and
+# plugin-installed contexts); fall back to the repo-relative path for local dev.
+ROOT_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$SCRIPT_DIR/../.." && pwd)}"
+
 if command -v jq &>/dev/null; then
     AGENT_TYPE=$(echo "$INPUT" | jq -r '.agent_type // empty' 2>/dev/null)
 else
@@ -81,6 +86,42 @@ When you finish a task:
 - [ ] DO NOT create new .md files outside your scope
 RULES_EOF
 )
+
+##############################################################################
+# AGENT MEMORY — persistent per-agent learning ("upgrade the sub-agent")
+# Load this agent's accumulated lessons and require it to record new ones.
+# File: .claude/agent-memory/<AGENT_TYPE>/lessons.md
+##############################################################################
+MEM_DIR="$ROOT_DIR/.claude/agent-memory/${AGENT_TYPE}"
+MEM_FILE="$MEM_DIR/lessons.md"
+mkdir -p "$MEM_DIR" 2>/dev/null
+
+if [ -s "$MEM_FILE" ]; then
+    LESSONS=$(head -n 200 "$MEM_FILE")
+    CONTEXT="${CONTEXT}
+
+══════════════════════════════════════════════════════════════
+  🧠 YOUR MEMORY (${AGENT_TYPE}) — lessons from past tasks
+══════════════════════════════════════════════════════════════
+
+**READ FIRST. Do NOT repeat these mistakes.** These are lessons YOU recorded on
+previous tasks in this project.
+
+${LESSONS}
+"
+fi
+
+CONTEXT="${CONTEXT}
+
+## 🧠 Record what you learned (MANDATORY on correction)
+
+If code review / QA / the user REJECTS or CORRECTS your work, append a one-line
+lesson to \`.claude/agent-memory/${AGENT_TYPE}/lessons.md\` BEFORE you re-submit:
+
+    - [YYYY-MM-DD] <what went wrong> → <the rule to follow next time>
+
+Keep it terse and reusable (a rule, not a story). This file is auto-loaded into
+your context on every future task, so future-you gets smarter."
 
 # Output as JSON
 if command -v jq &>/dev/null; then

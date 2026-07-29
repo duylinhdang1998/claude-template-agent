@@ -5,15 +5,15 @@
     "email": "duylinhdang1998@users.noreply.github.com"
   },
   "metadata": {
-    "description": "VFM Agent Company — autonomous AI software company plugin for Claude Code, now with an integrated SEO division (18 SEO sub-agents + 25 SEO skills) and mechanically-enforced frontend code standards",
-    "version": "1.6.0"
+    "description": "VFM Agent Company — autonomous AI software company plugin for Claude Code, now with an integrated SEO division (18 SEO sub-agents + 25 SEO skills), auto-injected design systems + agent memory, and mechanically-enforced frontend code standards",
+    "version": "1.7.0"
   },
   "plugins": [
     {
       "name": "vfm-agent-company",
       "source": "./plugins/vfm-agent-company",
-      "description": "Autonomous AI software company with CEO/CTO/PM/HR/BA + 17 FAANG specialists and a Google/Ahrefs/DataForSEO SEO division (18 SEO sub-agents + 25 SEO skills), BDD-driven development, sprint orchestration, mechanically-enforced frontend code standards, and full hook automation",
-      "version": "1.6.0",
+      "description": "Autonomous AI software company with CEO/CTO/PM/HR/BA + 17 FAANG specialists and a Google/Ahrefs/DataForSEO SEO division (18 SEO sub-agents + 25 SEO skills), BDD-driven development, sprint orchestration, auto-injected design systems + agent memory, mechanically-enforced frontend code standards, and full hook automation",
+      "version": "1.7.0",
       "author": {
         "name": "Dang Duy Linh"
       },

@@ -66,9 +66,11 @@ Without loading tech-specific skills, you CANNOT catch framework anti-patterns.
 - Read `helpers/code-quality.md` → "Frontend Code Standards" (the 4 rules). For each:
 - **One component per file** — 🔴 flag any file that defines/exports more than one
   component. Sub-components defined inline below the main one = violation.
-- **Design system compliance** — uses design tokens (colors, type scale, spacing,
-  radius, shadows) from the design reference? 🟡 flag ad-hoc hex colors, arbitrary
-  `px` spacing, or one-off font sizes that bypass the system.
+- **Design system compliance** — 🔴 REJECT any value that bypasses the project's
+  design system (the file at `.project/design-system.md` / `DESIGN.md`, also
+  auto-injected into the UI agent). Flag raw hex colors, arbitrary `px` spacing,
+  and one-off font sizes where a token exists. This is a NEEDS-FIX blocker, not a
+  nitpick — mismatched design tokens are the most common frontend rejection.
 - **Shared logic extracted** — 🟡 flag duplicated helpers, reusable logic buried in a
   component, or shared utils/hooks not split into their own file (`lib/`/`utils/`,
   `hooks/use-*.ts`, one concern per file).
