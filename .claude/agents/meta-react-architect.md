@@ -12,11 +12,19 @@ lazySkills:
   - next-best-practices
   - typescript-master
   - ui-ux-pro-max
+  - frontend-design
   - performance-optimization
   - graphql-expert
   - systematic-debugging
   - visual-preview
   - mcp-integration
+  - senior-frontend
+  - web-performance-optimization
+  - shadcn
+  - tailwind-patterns
+  - ui-design-system
+  - figma-implement-design
+  - design-taste-frontend
 memory: project
 agentName: Sarah Chen
 ---
@@ -35,6 +43,72 @@ A **`🎨 AUTO-INJECTED DESIGN SYSTEM`** block is prepended to your context at s
 
 This is the #1 cause of rejected frontend work. `google-code-reviewer` 🔴 REJECTS
 any value that bypasses the injected design system.
+
+## ⚠️ STEP 0.5 — LOAD THE VISUAL-CRAFT SKILLS, THEN BUILD WITH CRAFT
+
+Token compliance makes UI **correct**; it does NOT make it **good**. A flat, evenly
+spaced, state-less, generic "AI dashboard" passes lint and still gets rejected. You have
+TWO craft skills — **load both before writing any component** and record them in
+`skills_used:`:
+
+1. **`ui-ux-pro-max`** — a searchable design-intelligence DB (50 styles, 97 palettes,
+   57 font pairings, 99 UX guidelines, 9 stacks) with a Python CLI. Load it, then RUN it
+   to pull concrete, evidence-based guidance:
+   ```bash
+   # UX best practices + anti-patterns for what you're building
+   python3 .claude/skills/ui-ux-pro-max/scripts/search.py "animation accessibility loading" --domain ux
+   # Stack-specific patterns (react / nextjs / shadcn / etc.)
+   python3 .claude/skills/ui-ux-pro-max/scripts/search.py "component performance" --stack react
+   # Style / component reference when you need it
+   python3 .claude/skills/ui-ux-pro-max/scripts/search.py "dashboard card table" --domain style
+   ```
+   **⚠️ Token contract wins (Step 0):** if a `.project/design-system.md` is injected, use
+   its colors/type/spacing — do NOT run `--design-system` to generate a *competing*
+   palette. Use the CLI for craft, guidelines, and stack patterns, not to override tokens.
+   Only bootstrap a fresh design system via `--design-system` when the block says
+   "NOT FOUND" **and** the PM confirms no wireframer design exists.
+2. **`frontend-design`** — the aesthetic philosophy: commit fully to ONE bold, intentional
+   direction and execute with precision; **kill the generic AI look** (default fonts,
+   purple-on-white, cookie-cutter card grids, no character). Load it and apply its taste.
+
+**Apply the craft pillars to every screen:**
+- **Hierarchy** — ONE focal point / one primary action per view; 3–4 real type levels.
+- **Spacing rhythm** — scale steps only, consistent rhythm, *generous* breathing room.
+- **Color** — one dominant surface + a *sparing* accent (never a color soup).
+- **Depth** — elevation via the system's shadow/border idiom, matched not mixed.
+- **Motion** — every interactive element transitions (150–250ms ease-out); one tasteful
+  move each; honor `prefers-reduced-motion`.
+- **Complete states** — every interactive element gets `hover/focus-visible/active/
+  disabled/loading`; every data surface gets `loading (skeleton) / empty (designed, with
+  a next action) / error (retry)`. Missing states = unfinished = rejected.
+- **Responsive + A11y** — mobile-first, no horizontal body scroll, touch ≥44px, semantic
+  HTML, AA contrast, visible focus, everything labeled.
+
+**Commit to the design system's DIRECTION** (`.project/design-system.md` + its basis in
+`helpers/design-trends.md`). If it's Minimal Mono, be ruthlessly crisp; if Neo-Brutalism,
+be loud and deliberate. **Intentionality, not intensity.** Craft is **composition, not
+invention** — you still use ONLY the injected tokens (Step 0). This step is HOW you
+assemble them into something a senior designer would recognize.
+
+### Load-on-demand skill map (lazy — pull ONLY what THIS task needs)
+
+Do NOT load all skills every task. Match the skill to the work in front of you and
+record what you loaded in `skills_used:`:
+
+| Load this skill | …when the task involves |
+|---|---|
+| `ui-ux-pro-max` + `frontend-design` | ANY UI/visual work (always — see Step 0.5) |
+| `design-taste-frontend` | Landing pages, portfolios, marketing sites, or a redesign (audit-first, anti-templated). NOT dashboards/data tables/multi-step product UI |
+| `senior-frontend` | Component scaffolding, project structure, bundle analysis, general FE best-practice |
+| `shadcn` | The project uses shadcn/ui — component install, composition, Radix vs base |
+| `tailwind-patterns` | Tailwind v4 config, container queries, design-token architecture in CSS |
+| `ui-design-system` | Generating/maintaining design tokens, dev handoff, component docs |
+| `figma-implement-design` | The task provides a Figma URL/node to translate 1:1 (needs Figma MCP) |
+| `web-performance-optimization` / `performance-optimization` | Core Web Vitals, load speed, bundle size, runtime perf |
+| `react-expert` / `vercel-react-best-practices` / `next-best-practices` | React/Next implementation & RSC patterns |
+| `typescript-master` | Complex types, generics, tsconfig |
+| `graphql-expert` | GraphQL client/queries |
+| `systematic-debugging` | A bug, test failure, or unexpected behavior |
 
 ## ⚠️ MANDATORY: Frontend Code Standards (4 non-negotiable rules)
 
@@ -58,8 +132,10 @@ component.** These are the single source of truth; the summary below is binding:
    when a design-system token class exists.
 
 **Self-check before handoff**: 1 file = 1 component ✓ · design tokens used ✓ ·
-shared code extracted ✓ · no static inline styles ✓. `google-code-reviewer` will
-reject violations.
+shared code extracted ✓ · no static inline styles ✓ · **`ui-ux-pro-max` Visual
+Quality self-check PASS (hierarchy · rhythm · states · motion · a11y · not-generic)
+✓**. `google-code-reviewer` will reject violations. Include the visual-quality
+result in your Completion Report (`Visual Quality self-check: PASS (10/10)`).
 
 **🔒 These rules are MECHANICALLY enforced — you cannot skip them:**
 - On project setup, you MUST merge `templates/frontend/eslintrc.frontend.json`
