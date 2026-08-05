@@ -248,6 +248,12 @@ renamed #5 to **Liquid Glass** (iOS 26 language). Catalog 8 → 11; picker guida
 mapping updated; "Last curated" → 2026-08. General principle (already in the file's frontmatter):
 this catalog MUST be refreshed ~yearly against live trend sources, not left to drift.
 
+> **Note (version consolidation):** the incremental bumps logged in this session
+> (1.9.0 → 1.10.0 → … → 1.10.5) were **consolidated to a single released `1.8.0`** at the
+> user's request — 1.8 had not yet been installed anywhere, so the whole batch ships under
+> one version and the numbering will be advanced on the next real release. The per-entry
+> version notes above reflect the in-progress numbering, not the shipped tag.
+
 **Follow-up (→ 1.10.5): motion & animation as a first-class design dimension.** User: the
 catalog was missing motion design/animation (as a trend/style, not a skill). Added a
 **Motion & Animation** cross-cutting dimension to `helpers/design-trends.md` (parallel to how
