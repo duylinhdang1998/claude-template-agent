@@ -22,6 +22,9 @@ the project type). Each entry has a **token starter** — copy it into
 > Kinetic Type) — lead with them for greenfield marketing/product sites.
 > **Layout ≠ palette:** Bento Grid (9) is a *layout system* that combines with any
 > palette here — pair it (e.g. "Bento + Minimal Mono").
+> **Motion is a dimension too:** after picking a visual style, ALSO pick a **motion
+> personality** from the Motion & Animation section below and bake its tokens into
+> `.project/design-system.md` — every style needs a motion answer, not just colors.
 
 ---
 
@@ -116,11 +119,68 @@ morph on scroll; imagery is minimal, the type IS the design. High energy, memora
 
 ---
 
+## 🎬 Motion & Animation (cross-cutting dimension — pair with ANY style above)
+
+Motion is not a style on its own — it's a **personality layer** laid over the chosen visual
+direction (like Bento is a layout layer). Pick **ONE** motion personality with the user, then
+bake its tokens into the `motion` section of `.project/design-system.md` so every UI specialist
+animates consistently. **Purpose over decoration:** motion must guide attention, show
+cause→effect, or smooth a state change — never move just to move.
+
+### Motion personalities (pick one)
+
+**M-A. Functional / Subtle** — fast, near-invisible, gets out of the way.
+- Pairs with: 1 Minimal Mono, 6 Dark Terminal, 9 Bento (dashboards), B2B / dev tools.
+- Tokens: duration `120 / 180 / 240ms`; easing enter `cubic-bezier(.2,0,0,1)`, exit `cubic-bezier(.4,0,1,1)`; enter distance `4–8px`; stagger `30ms`.
+- Signature: hover/press micro-feedback, fade + 2px slide on mount, skeleton→content crossfade.
+
+**M-B. Smooth / Premium (Apple-like)** — deliberate, choreographed, shared-element.
+- Pairs with: 5 Liquid Glass, 4 Editorial, 7 Warm Minimalism, 10 Expressive Minimalism.
+- Tokens: duration `200 / 320 / 480ms`; easing `cubic-bezier(.32,.72,0,1)`; distance `8–16px`; stagger `60ms`.
+- Signature: layout / shared-element transitions (View Transitions API or Framer `layout`), spring on key CTAs, gentle parallax.
+
+**M-C. Playful / Springy** — bouncy, tactile, characterful.
+- Pairs with: 2 Soft Pastel, 3 Neo-Brutalism (snappy), consumer / social, onboarding.
+- Tokens: spring `stiffness 400, damping 28` (Framer) or `cubic-bezier(.34,1.56,.64,1)` (overshoot); duration `250–400ms`; stagger `50ms`.
+- Signature: overshoot on entrance, scale/wobble on tap, rubber-band drag, success pops/confetti.
+
+**M-D. Cinematic / Scroll-driven** — big, sequenced, storytelling.
+- Pairs with: 8 Bold Gradient, 11 Kinetic Typography, 5 Liquid Glass, marketing / launch / portfolio.
+- Tokens: duration `400–800ms` sequences; easing `cubic-bezier(.16,1,.3,1)` (expo-out); scroll-linked; stagger `80–120ms`.
+- Signature: scroll-triggered reveals & pins, parallax layers, mask/clip text reveals, marquee, number counters.
+
+### Motion token starter (add to `design-system.md` → motion section)
+```
+--duration-fast / --duration-base / --duration-slow   (from the chosen personality)
+--ease-standard  : enter easing        --ease-exit : exit easing
+--ease-emphasized: spring/overshoot for delight moments
+--motion-distance: enter offset (px)   --stagger-step: list stagger (ms)
+```
+
+### 🚫 Non-negotiable motion rules (apply to EVERY personality)
+- **Respect `prefers-reduced-motion`** — ship an instant/static fallback (no large movement,
+  parallax, or autoplay). MANDATORY; never ship motion without it. `google-code-reviewer`
+  should flag its absence.
+- **Animate only `transform` + `opacity`** (compositor-friendly → 60fps). NEVER animate
+  `width/height/top/left/margin` (layout thrash) — use transforms.
+- **Fast where it's feedback**: interactive feedback feels instant (≤100ms); don't gate
+  essential feedback behind a long animation. Enter can be expressive; exit is quicker.
+- **Choreograph, don't chaos**: one focal motion per view; stagger related items; never
+  animate everything at once.
+
+**Implementation** (for the frontend specialist): CSS transitions/keyframes for
+micro-interactions; Framer Motion (React) for orchestration — `variants`, `AnimatePresence`,
+`layout`, and `useReducedMotion`; GSAP + ScrollTrigger for complex scroll timelines; the
+native View Transitions API for page / shared-element transitions.
+
+---
+
 ## After the user picks
 
 Generate `.project/design-system.md` from `.claude/templates/design-system.md`,
 filling **concrete** tokens from the chosen direction above (no blanks left).
 Add: exact color ramp, type scale + font families, spacing scale (4/8-based),
-radius + shadow tokens, motion durations, and 2–3 component patterns (button,
-input, card) referencing those tokens. This file is auto-injected into the
-frontend agent's context — it MUST be concrete and complete.
+radius + shadow tokens, **motion tokens (durations + easings + stagger from the chosen
+motion personality M-A…M-D)**, and 2–3 component patterns (button, input, card)
+referencing those tokens. This file is auto-injected into the frontend agent's context
+— it MUST be concrete and complete.

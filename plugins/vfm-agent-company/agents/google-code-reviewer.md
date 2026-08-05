@@ -106,6 +106,7 @@ tokens on a best-effort basis; do not invent the expected values.
 - No N+1 queries, unnecessary re-renders
 - Proper memoization (memo, useMemo, useCallback) where needed
 - ⭐ **Conditional Render Flag**: Any interactive element (drag handle, button with event listeners, clickable area) that is conditionally rendered based on hover/focus state MUST be flagged. Pattern: `{isHovered && <DragHandle />}` = 🔴 if DragHandle has listeners — the element unmounts when hover drops during drag/click, breaking the interaction. Fix: always render, use CSS opacity/visibility instead.
+- **Motion/animation** (when the diff adds transitions/animations): 🔴 flag animation with NO `prefers-reduced-motion` fallback; 🔴 flag animating layout props (`width/height/top/left/margin`) instead of `transform`/`opacity`; 🟡 flag durations/easings that bypass the design-system motion tokens or a "move for decoration" with no purpose.
 
 ### 5. BDD Compliance
 - All .feature scenarios have corresponding tests?

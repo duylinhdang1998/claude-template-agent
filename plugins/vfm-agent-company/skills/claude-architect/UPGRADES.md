@@ -248,4 +248,19 @@ renamed #5 to **Liquid Glass** (iOS 26 language). Catalog 8 → 11; picker guida
 mapping updated; "Last curated" → 2026-08. General principle (already in the file's frontmatter):
 this catalog MUST be refreshed ~yearly against live trend sources, not left to drift.
 
+**Follow-up (→ 1.10.5): motion & animation as a first-class design dimension.** User: the
+catalog was missing motion design/animation (as a trend/style, not a skill). Added a
+**Motion & Animation** cross-cutting dimension to `helpers/design-trends.md` (parallel to how
+Bento Grid is a layout dimension): 4 motion personalities (M-A Functional · M-B Premium ·
+M-C Playful · M-D Cinematic) each with concrete duration/easing/stagger tokens + which visual
+styles they pair with + the non-negotiable rules (`prefers-reduced-motion` fallback, animate
+only `transform`/`opacity`, purposeful not decorative). Found + closed the downstream gap:
+`templates/design-system.md` had **no motion section**, so the token contract had nowhere to
+land — added a Motion & Animation token table (durations, easings, distance, stagger). And to
+keep the template's "reviewer rejects motion violations" claim honest (the same enforce-without-
+a-check anti-pattern), added a motion bullet to `google-code-reviewer` §4 (flag missing
+reduced-motion fallback, animating layout props, off-token durations). General principle: every
+token dimension the design agent can choose MUST have (a) a slot in the design-system template
+and (b) a matching check in the reviewer — otherwise it's advice, not a contract.
+
 ---

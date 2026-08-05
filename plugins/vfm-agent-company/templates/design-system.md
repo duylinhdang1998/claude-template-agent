@@ -42,6 +42,25 @@
 | `radius-sm` / `radius-md` / `radius-lg` | `___ / ___ / ___` |
 | `shadow-sm` / `shadow-md` | `___ / ___` |
 
+## Motion & Animation (tokens)
+
+Motion personality: `____` (M-A Functional / M-B Premium / M-C Playful / M-D Cinematic — see design-trends).
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--duration-fast` | `___ms` | hover, press, micro-feedback |
+| `--duration-base` | `___ms` | enter/exit, state changes |
+| `--duration-slow` | `___ms` | large/cinematic transitions |
+| `--ease-standard` | `cubic-bezier(___)` | default enter easing |
+| `--ease-exit` | `cubic-bezier(___)` | exit easing (usually quicker) |
+| `--ease-emphasized` | `spring(___) / cubic-bezier(___)` | delight moments, key CTAs |
+| `--motion-distance` | `___px` | enter offset (fade+slide) |
+| `--stagger-step` | `___ms` | delay between staggered list items |
+
+**Rules (binding):** every animation MUST honor `prefers-reduced-motion` (static fallback);
+animate **only `transform` + `opacity`** (never `width/height/top/left/margin`); one focal
+motion per view. `google-code-reviewer` rejects motion that violates these.
+
 ## Tailwind / framework mapping (if applicable)
 
 - How the tokens above map to Tailwind theme keys / CSS variables / component libs.
