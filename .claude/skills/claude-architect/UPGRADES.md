@@ -187,6 +187,16 @@ not a failure fix.
 
 **Version:** 1.10.0 → 1.10.1 (patch — agent skill-wiring + two correctness fixes, no new skills).
 
-**Commit:** _(filled after push)_
+**Commit:** 76c906a
+
+**Follow-up (same review, → 1.10.2):** applied the P2 lean-body pass to `google-qa-engineer`
+for consistency — it was the fattest agent at 239 lines with ~110 lines of decorative persona
+(SDLC-phase list, a week-1–5 gantt, a Communication block, duplicate skill pointers) injected
+every spawn and duplicated by the `qa-testing` skill. Cut to **156 lines** (−35%), keeping ALL
+operational content (RUN-TESTS gate, browser tiers, skill map, the Quality-Gates sign-off
+checklist, test-pyramid standards). `google-code-reviewer` left as-is: already lean at 132
+lines; its only nuance (no `Bash`, so it cannot literally run lint/tsc) is a deliberate
+read-only-reviewer tradeoff, not a defect — no change warranted (claude-architect boundary
+condition: don't upgrade for the sake of it).
 
 ---
