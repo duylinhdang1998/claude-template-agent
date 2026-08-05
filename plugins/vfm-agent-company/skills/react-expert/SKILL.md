@@ -2,6 +2,7 @@
 name: react-expert
 description: React development expertise from Meta engineers who built React for billions of users. Use when building React components, implementing hooks, managing state, optimizing performance, or debugging React issues. Triggers on React, useState, useEffect, useContext, useMemo, useCallback, component patterns, JSX, React Query, Redux, Zustand, Server Components.
 ---
+
 # React Expert Skill
 
 ## Overview

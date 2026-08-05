@@ -42,3 +42,104 @@ Not applicable — initial skill creation, not an upgrade of an existing skill. 
 **Commit:** _(filled after push)_
 
 ---
+
+## [2026-08-05] SYSTEM AUDIT — "agents getting slower & lower-quality over time"
+
+**Trigger (user report):**
+> "agent code càng ngày càng chậm và kém" — run claude-architect to find what needs improving. Focus: per-spawn injected context, eager MCP, the just-upgraded FE/BE agents.
+
+**Iteration count:** 1st — system audit, not a single-skill fix.
+
+**Evidence gathered (measured, not assumed):**
+- FE agent body = 256 lines / 12KB with **9** `MANDATORY`/`⚠️`/`MUST`/`STEP` blocks; BE = 190 lines / 7KB. The agent `.md` body is injected as the FULL system prompt on EVERY spawn.
+- Per-spawn fixed preamble (UI agent, Wireframes=Yes) ≈ 12KB body + ~2KB skill menu + ~2–3KB task-rules block + up to ~15KB design-system (`MAX_DS_LINES=500`) ≈ **~30KB (~7–8K tokens) before the agent writes one line.**
+- `settings.json` eagerly loads **3 MCP servers** (`figma`, `sequential-thinking`, `context7`) every session regardless of task; each taxes every request's tool surface.
+- Ruled OUT as causes: lazySkills (menu-only injection, ~1 line each) and agent-memory `lessons.md` (7 lines, not unbounded).
+
+**Root cause (general patterns, per architect lenses):**
+1. **Preamble Bloat / "everything is MANDATORY"** (lens: Weak-Modality inverted) — when 9 blocks all shout MUST, priority becomes illegible and the model spends attention reconciling rules instead of doing the task. Detailed how-to prose is *duplicated* in the agent body when it already lives in a lazySkill (e.g. STEP 0.5 craft pillars ≈ ui-ux-pro-max).
+2. **Unconditional heavy injection** — full rule block + up to 15KB design-system injected even for trivial tasks; the body itself is the biggest, always-on cost.
+3. **Eager MCP loading** — task-specific servers (Figma import, docs fetch, deep reasoning) are globally enabled, so every session pays for them.
+
+**Proposed upgrades (general, verifiable — pending user pick before apply):**
+- **P1 (MCP leanness):** *"MCP servers in settings.json load eagerly and tax every request. Globally enable ONLY servers the majority of sessions use; task-specific servers are opt-in per project."* Verify: each global `mcpServers` entry must justify majority-use.
+- **P2 (agent-body leanness):** *"An agent `.md` is the full system prompt on every spawn — keep it lean. Consolidate to ONE read-first gate; put detailed how-to in lazySkills, never duplicated in the body; keep top-level `MANDATORY`/`⚠️` blocks ≤ 3 so priority stays legible."* Verify: body line count + count of top-level MUST-blocks ≤ 3.
+- **P3 (drift detection):** *"`check-drift.sh` must diff every canonical→plugin artifact class (skills, agents, core, helpers), not just hooks"* — this is why `claude-architect` itself sat mis-placed undetected.
+
+**Upgrade type:** [ audit — recommendations logged; application pending user confirmation ]
+
+**Self-score:** deferred until a specific upgrade (P1/P2/P3) is applied.
+
+**Commit:** _(audit entry; per-fix commits follow once user picks)_
+
+---
+
+## [2026-08-05] SYSTEM AUDIT — P1/P2/P3 APPLIED + drift reconciliation
+
+**Trigger:** User confirmed "Làm cả 3 nhé, commit chung 1 nhánh" (apply all three, one branch).
+
+**What was applied:**
+
+**P1 — MCP leanness.** `settings.json`: globally enable ONLY `sequential-thinking`
+(majority-use); `figma` + `context7` set `disabled:true` with OPT-IN descriptions
+(task-specific — enable per project). Verify: every global `mcpServers` entry justifies
+majority-use.
+
+**P2 — Agent-body leanness.** The agent `.md` is the FULL system prompt on every spawn.
+- `meta-react-architect`: 256→189 lines (−26%). Collapsed 5 shouting `⚠️/MANDATORY/STEP`
+  blocks into **3 read-first GATES** (tokens · visual-craft · ship). The ~45-line
+  craft-pillars prose (duplicated the `ui-ux-pro-max`/`frontend-design` skills) compressed
+  to a one-line ship-quality bar with detail delegated to those on-demand skills.
+- `netflix-backend-architect`: 190→173 lines. Removed the ~33-line `/go` block duplicated
+  verbatim from the FE agent (detail lives in the `/go` skill); **2 GATES** (ship · skill map).
+- All mechanical enforcement preserved verbatim (ESLint merge + `npm run lint` gate,
+  PostToolUse multi-component hook, `/go` PASS requirement + report format).
+Verify: body line count + top-level MUST-blocks ≤ 3.
+
+**P3 — Drift detection, and the drift it found.** `check-drift.sh` now (a) includes `skills`
+in `DIRECT_DIRS`, (b) skips build/OS artifacts, (c) adds a REVERSE pass detecting plugin-only
+ORPHANs. Running it surfaced large pre-existing drift, now reconciled:
+- **49 skills** diverged canonical↔plugin. Direction resolved per-file by which side held
+  unique content: 47 were canonical-newer (richer frontmatter metadata) → pushed to plugin;
+  `clone-website` was plugin-newer by ~93 lines (the "🚨 PRIME DIRECTIVE — absolute fidelity"
+  + "⛔ Workflow Gate") → **backported to canonical** (canonical had been missing the entire
+  anti-improvisation ruleset — a direct quality-regression source); `work` description
+  backported (plugin-newer, keeps `${CLAUDE_SESSION_ID}` placeholder).
+- **2 orphans** (`go`, `simplify`) existed only in the plugin → backported to canonical
+  (same class that had hidden `claude-architect`).
+- **`enforce-delegation.sh`** — plugin had intent-routing logic (route clone/build prompts to
+  `/work`) that canonical lacked → backported to canonical (kept canonical's `$0`-relative
+  path style; only the by-design `CLAUDE_PROJECT_DIR` vs `ROOT_DIR` path lines now differ).
+- `codex/dist` regenerated; drift check now clean but for the by-design hook path lines.
+
+**General principle reinforced:** the distributed plugin silently drifting from canonical is
+itself a cause of "agents getting worse over time" — consumers installed skills without
+metadata and a `clone-website` without its fidelity rules. Drift detection MUST cover every
+artifact class in BOTH directions, or stale distributed copies rot unnoticed.
+
+**Self-score (per applied change):**
+
+| Criterion | P1 MCP | P2 agents | P3 drift |
+|---|---|---|---|
+| 1 Specificity Avoidance | 9 | 9 | 10 |
+| 2 Verifiability | 9 | 9 | 10 |
+| 3 Placement | 9 | 10 | 9 |
+| 4 Clarity | 9 | 9 | 9 |
+| 5 Completeness | 8 | 9 | 9 |
+| 6 Anti-Regression | 8 | 9 | 10 |
+| 7 Brevity | 9 | 9 | 8 |
+| 8 Evidence Grounding | 10 | 10 | 10 |
+| 9 Consistency | 9 | 9 | 9 |
+| 10 Actionability | 9 | 9 | 9 |
+| **Overall** | **8.9** | **9.2** | **9.3** |
+
+All ≥ 8.0, no single < 6 → pass. Weakest: P1 Completeness/Anti-Regression (8) — a future
+project could still re-enable an MCP without justification; mitigated by the OPT-IN
+descriptions embedded at each server. P3 Brevity (8) — the reverse-pass added lines, but they
+are load-bearing.
+
+**Version:** 1.9.0 → 1.10.0 (minor — restructure of 2 agents + plugin skill-metadata sync).
+
+**Commit:** _(filled after push)_
+
+---

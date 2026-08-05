@@ -167,8 +167,8 @@
     "figma": {
       "url": "http://127.0.0.1:3845/sse",
       "transport": "sse",
-      "description": "Access Figma design files and extract design specs (local SSE server)",
-      "disabled": false
+      "description": "OPT-IN (task-specific: Figma-to-code). Eager MCP taxes every session; enable per project by setting disabled:false when doing Figma imports.",
+      "disabled": true
     },
     "sequential-thinking": {
       "command": "npx",
@@ -186,9 +186,9 @@
         "-y",
         "@upstash/context7-mcp"
       ],
-      "description": "Access up-to-date documentation for any library/framework",
+      "description": "OPT-IN (task-specific: docs lookup). Spawns an npx process every session; enable per project by setting disabled:false when you need live library docs.",
       "env": {},
-      "disabled": false
+      "disabled": true
     }
   }
 }

@@ -1,11 +1,102 @@
 ---
 name: clone-website
-description: Reverse-engineer and clone one or more websites in one shot — extracts assets, CSS, and content section-by-section and proactively dispatches parallel builder agents in worktrees as it goes. Use this whenever the user wants to clone, replicate, rebuild, reverse-engineer, or copy any website. Also triggers on phrases like "make a copy of this site", "rebuild this page", "pixel-perfect clone". Provide one or more target URLs as arguments.
-argument-hint: "<url1> [<url2> ...]"
-user-invocable: true
+description: "[Specialist-only tool inside /work workflow] Reverse-engineer and clone one or more websites in one shot — extracts assets, CSS, and content section-by-section and proactively dispatches parallel builder agents in worktrees as it goes. Pixel-perfect extraction with auditable spec files per component. Loaded by specialist agents (meta-react-architect, apple-ux-wireframer) during a PM-assigned sprint task. Do NOT trigger directly on raw user requests — when a user asks to clone/replicate/rebuild a site, route to /work first so CEO scopes it and PM plans the sprint; the specialist then loads this skill to execute."
+---
+# Clone Website
+
+## ⛔ Workflow Gate (READ FIRST)
+
+This skill is part of the **VFM Agent Company** workflow and MUST run inside a sprint task.
+
+**Before doing anything, check:**
+
+1. Does `.project/sprints/` directory exist with an active sprint? If NO → **STOP**.
+2. Are you currently a specialist agent (Sarah/Marcus/etc.) executing a PM-assigned task? If NO → **STOP**.
+
+**If either check fails, respond exactly:**
+
+> 🎯 Website cloning is a project-scope task in this workspace. Please run:
+> ```
+> /work "Clone the website at <URL>"
+> ```
+> The CEO will approve scope, PM will create a sprint, and a frontend specialist will execute the clone using this skill. Do not run clone-website directly.
+
+Then **stop** — do not extract, do not spawn builder agents, do not write files.
+
+If both checks pass, proceed below.
+
 ---
 
-# Clone Website
+## 🚨 PRIME DIRECTIVE — ABSOLUTE FIDELITY TO THE ORIGINAL (NON-NEGOTIABLE)
+
+> **You are a forger, not a designer. Your single job is to produce a byte-faithful visual twin of the source site. Creative freedom is ZERO.**
+
+This rule overrides every other instruction in this skill. If any later section appears to contradict this rule, this rule wins.
+
+### Hard Bans — NEVER do any of these without explicit user approval
+
+- ❌ **Do NOT invent new sections** that aren't on the original page (no "we added a testimonials block because the page looked empty")
+- ❌ **Do NOT remove or merge sections** that exist on the original
+- ❌ **Do NOT reorder** sections, components, cards, list items, or nav links
+- ❌ **Do NOT change the layout** — no swapping grid for flex, no converting 3-column to 4-column, no changing stacking order
+- ❌ **Do NOT substitute CSS values** — no "rounded-lg looks close to 14px", no "gap-6 instead of the actual 22px", no "text-neutral-900 instead of the actual `#0B0B0C`". Extract the **exact** computed value and use arbitrary Tailwind values (`rounded-[14px]`, `gap-[22px]`, `text-[#0B0B0C]`) or raw CSS when no preset matches.
+- ❌ **Do NOT redesign typography** — no "this font looks ugly, I'll use Inter". Use the actual `font-family`, `font-weight`, `letter-spacing`, `line-height` from `getComputedStyle`.
+- ❌ **Do NOT redesign colors** — no "lighter shade of blue for better contrast". Colors must match the extracted hex/rgb exactly.
+- ❌ **Do NOT "improve" copy** — headlines, body text, CTAs, button labels, footer links must be copied verbatim via `element.textContent`. No paraphrasing, no translation, no fixing typos.
+- ❌ **Do NOT substitute assets** — download the real images/SVGs/videos/fonts from the live site. No stock photos, no placeholder images, no "similar" illustrations.
+- ❌ **Do NOT add features** — no dark mode toggle, no animations, no hover effects, no interactions that aren't on the original.
+- ❌ **Do NOT drop features** — if the original has a sticky header, a mega-menu, a carousel, a video autoplay, your clone must too.
+- ❌ **Do NOT modernize** — if the original uses a 2015 design pattern, keep it. You are cloning, not rebuilding.
+
+### Mandatory Verification — before marking ANY component "done"
+
+For every component/section, you MUST produce a side-by-side comparison:
+
+1. Screenshot original at the target viewport (1920, 1440, 768, 375)
+2. Screenshot the clone at the same viewport
+3. Place them side-by-side (left: original, right: clone) in `docs/design-references/<hostname>/diffs/<section>-<viewport>.png`
+4. Visually diff — if ANY of these differ, the component is NOT done:
+   - Spacing (margin/padding/gap) — tolerance: 1px
+   - Colors — tolerance: 0 (exact hex match)
+   - Typography (font-family, size, weight, line-height, letter-spacing) — tolerance: 0
+   - Border-radius, border-width, border-color — tolerance: 0
+   - Shadow (offset, blur, spread, color, opacity) — tolerance: 0
+   - Element positions and sizes — tolerance: 2px
+   - Content (text, images, icons) — tolerance: 0, must be identical
+   - Number of items (cards, list rows, nav links) — tolerance: 0
+5. If diffs exist, iterate on the component until they don't. **Do not mark the task done while diffs remain.**
+
+### The "No Improvisation" Oath
+
+When specifying a component for a builder agent, every value in the spec file MUST trace back to a concrete source:
+
+| Value | Acceptable source |
+|---|---|
+| Color | `getComputedStyle().color` / `.backgroundColor` / etc. on the actual element |
+| Spacing | `getComputedStyle().padding` / `.margin` / `.gap` |
+| Typography | `getComputedStyle().fontFamily` / `.fontSize` / `.fontWeight` / `.lineHeight` / `.letterSpacing` |
+| Asset | Downloaded file path from the live site |
+| Text content | `element.textContent` / `element.innerHTML` |
+| Layout | DOM tree observation + computed `display` / `grid-template` / `flex-direction` |
+
+If you cannot cite a source, you are inventing. Go back to the browser and extract the real value.
+
+### When to ask the user instead of guessing
+
+If the original site has something you genuinely cannot replicate (e.g., a proprietary video, a real-time data feed, an authenticated section you can't access), **stop and ask the user**. Do NOT fill the gap with creative substitutes. Options to offer the user:
+
+1. Skip the section (mark as out-of-scope in the spec)
+2. Use a static placeholder with the exact dimensions and a neutral color
+3. Provide alternate source material (the user uploads the asset)
+
+Never pick option 4: "I made something similar up."
+
+### What "pixel-perfect" actually means here
+
+A reviewer holding a phone with the original site on the left and the clone on the right should be unable to tell which is which at any viewport. That is the bar. Anything less is a fail.
+
+---
+
 
 You are about to reverse-engineer and rebuild **$ARGUMENTS** as pixel-perfect clones.
 
