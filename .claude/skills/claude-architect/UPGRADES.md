@@ -236,6 +236,16 @@ Weakest: skill-map Brevity/Completeness (8.8) — a routing aid, acceptable.
 
 **Version:** 1.10.2 → 1.10.3 (patch — agent skill-wiring + generator-usage fix, no new skills).
 
-**Commit:** _(filled after push)_
+**Commit:** 6e7b27c
+
+**Follow-up (→ 1.10.4): refreshed the trend catalog the design agent picks from.** User
+flagged `helpers/design-trends.md` was missing current 2026 UI trends (named Bento Grid,
+Minimalism). Verified against 2026 sources (web search) and added 3 directions with concrete
+token starters — **9. Bento Grid** (modular tile layout — the big miss; flagged as a LAYOUT
+system that combines with any palette), **10. Expressive Minimalism** (the 2026 evolution:
+clean + warmth/organic/personality), **11. Kinetic Typography** (motion-first big type) — plus
+renamed #5 to **Liquid Glass** (iOS 26 language). Catalog 8 → 11; picker guidance + product-type
+mapping updated; "Last curated" → 2026-08. General principle (already in the file's frontmatter):
+this catalog MUST be refreshed ~yearly against live trend sources, not left to drift.
 
 ---
