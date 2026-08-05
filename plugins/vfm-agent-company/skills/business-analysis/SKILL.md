@@ -2,6 +2,7 @@
 name: business-analysis
 description: Business Analysis and Requirements Engineering from Amazon. Use when gathering requirements, writing user stories (As a/I want/So that), creating Software Requirements Specifications (SRS), conducting stakeholder interviews, defining acceptance criteria (Given/When/Then), managing scope with MoSCoW prioritization, handling change requests, or coordinating UAT. Triggers on requirements, user stories, acceptance criteria, scope, stakeholder management, business rules, or project discovery.
 ---
+
 # Business Analysis - Amazon Requirements Engineering
 
 **Purpose**: Complete business analysis and requirements engineering from Amazon

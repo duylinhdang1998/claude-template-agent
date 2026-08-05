@@ -18,24 +18,43 @@ DRIFT=0
 md5f() { md5 -q "$1" 2>/dev/null || md5sum "$1" 2>/dev/null | cut -d' ' -f1; }
 
 # dir pairs that are DIRECT mirrors (same relative path under each root)
-DIRECT_DIRS=(core agents helpers extensions schema pdf agent-memory templates)
+# NOTE: `skills` MUST be here — a skill that exists in only one copy is drift
+# (this is how the claude-architect meta-skill sat mis-placed and undetected).
+DIRECT_DIRS=(core agents skills helpers extensions schema pdf agent-memory templates)
+
+# files that are build/OS artifacts, never source — ignored in both directions
+skip_artifact() { case "$1" in *.DS_Store|*/__pycache__/*|*.pyc) return 0;; *) return 1;; esac; }
 
 echo "──────────────────────────────────────────────"
 echo " DRIFT CHECK — canonical: .claude/   vs   plugins/vfm-agent-company/"
 echo "──────────────────────────────────────────────"
 
+# Forward: every canonical file must exist + match in the plugin
 for d in "${DIRECT_DIRS[@]}"; do
   [ -d "$SRC/$d" ] || continue
   while IFS= read -r f; do
+    skip_artifact "$f" && continue
     rel="${f#$SRC/$d/}"
-    case "$rel" in *.DS_Store) continue;; esac
     dst="$PLUG/$d/$rel"
     if [ ! -f "$dst" ]; then
       echo "  ✗ MISSING in plugin : $d/$rel"; DRIFT=1
     elif [ "$(md5f "$f")" != "$(md5f "$dst")" ]; then
       echo "  ✗ DIFFERS           : $d/$rel"; DRIFT=1
     fi
-  done < <(find "$SRC/$d" -type f ! -name .DS_Store)
+  done < <(find "$SRC/$d" -type f)
+done
+
+# Reverse: files that exist ONLY in the plugin (never added to canonical) are
+# drift too — this is the exact class that hid claude-architect. Canonical wins.
+for d in "${DIRECT_DIRS[@]}"; do
+  [ -d "$PLUG/$d" ] || continue
+  while IFS= read -r f; do
+    skip_artifact "$f" && continue
+    rel="${f#$PLUG/$d/}"
+    if [ ! -f "$SRC/$d/$rel" ]; then
+      echo "  ✗ ORPHAN in plugin  : $d/$rel  (exists in plugin, missing from canonical .claude/)"; DRIFT=1
+    fi
+  done < <(find "$PLUG/$d" -type f)
 done
 
 # hooks: .claude/hooks/*.sh  →  plugin hooks/scripts/*.sh

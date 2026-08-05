@@ -2,6 +2,7 @@
 name: serverless
 description: Serverless - Cloud Functions & Event-Driven Architecture. Build APIs, event processing, scheduled tasks with AWS Lambda, API Gateway, DynamoDB. Use when building auto-scaling backend without managing servers.
 ---
+
 # Serverless - Cloud Functions & Event-Driven Architecture
 
 **Purpose**: Build scalable, cost-effective applications using serverless architecture with AWS Lambda, API Gateway, and managed services

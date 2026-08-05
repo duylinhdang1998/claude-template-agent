@@ -1,504 +1,264 @@
 ---
 name: redis-expert
-description: Redis in-memory data store expertise from Netflix engineers. Use when implementing caching strategies, managing user sessions, building real-time leaderboards, pub/sub messaging, rate limiting, distributed locks, or optimizing Redis data structures (strings, hashes, sets, sorted sets, streams). Triggers on Redis, caching, session store, pub/sub, rate limiting, in-memory database, or ElastiCache.
----
-# Redis Expert - In-Memory Data Store Mastery
-
-**Purpose**: Master Redis for caching, sessions, real-time features, and high-performance data storage
-
-**Agent**: Netflix Backend Architect
-**Use When**: Implementing caching, sessions, pub/sub, rate limiting, or real-time features
-
+description: Redis in-memory data store expertise from Netflix engineers. Use when implementing caching strategies, managing user sessions, building real-time leaderboards, pub/sub messaging, rate limiting, distributed locks, durable job/event streams, or optimizing Redis data structures (strings, hashes, sets, sorted sets, streams). Covers cache patterns, stampede protection, atomicity (Lua/MULTI), eviction, clustering, persistence, and production pitfalls. Triggers on Redis, caching, session store, pub/sub, rate limiting, distributed lock, Redis Streams, in-memory database, or ElastiCache.
 ---
 
-## Overview
+# Redis Expert — In-Memory Data Store Mastery
 
-Redis (REmote DIctionary Server) is an in-memory data structure store used as a database, cache, message broker, and streaming engine.
+**Agent**: Netflix Backend Architect (James Wilson) · **Stack**: Node.js + TypeScript (`ioredis`) · **Target**: Redis 7+
 
-**Core Strengths**:
-- Extremely fast (in-memory storage)
-- Rich data structures (strings, hashes, lists, sets, sorted sets)
-- Pub/Sub messaging
-- Persistence options
-- Atomic operations
-- TTL (Time To Live) support
+Redis is single-threaded for command execution (each command is atomic), in-memory,
+and microsecond-fast. Treat it as a **tool with a specific shape**, not a general DB.
+This skill is decision-first: pick the right structure and pattern, then the code is easy.
 
 ---
 
-## Core Concepts
+## 0. Decision framework — is Redis even the right tool?
 
-### 1. Basic Commands
+| Need | Use Redis? | Structure / pattern |
+|---|---|---|
+| Cache DB reads | ✅ | String (JSON) or Hash, cache-aside + TTL |
+| Session store | ✅ | Hash or String, TTL = session length |
+| Rate limiting | ✅ | String INCR (fixed window) or Sorted Set (sliding) |
+| Leaderboard / ranking | ✅ | Sorted Set (ZADD/ZRANGE) |
+| Ephemeral pub/sub (fire-and-forget) | ✅ | Pub/Sub |
+| **Durable** event queue / replay | ✅ | **Streams** (consumer groups) — NOT Pub/Sub |
+| Distributed lock | ⚠️ | `SET NX PX` — read the correctness caveats below |
+| Primary source of truth | ❌ | Use Postgres; Redis is a cache/derived store |
+| Complex queries / joins / reporting | ❌ | Use Postgres |
+| Large blobs (>100KB values) | ❌ | Object storage (S3) + cache the URL |
 
-```bash
-# Strings
-SET key "value"
-GET key
-SET counter 0
-INCR counter                 # Atomic increment
-INCRBY counter 5
-DECR counter
-
-# Expiration
-SET session:123 "user_data" EX 3600  # Expire in 1 hour
-EXPIRE key 60                         # Set TTL to 60 seconds
-TTL key                               # Check remaining TTL
-PERSIST key                           # Remove expiration
-
-# Delete
-DEL key
-EXISTS key
-```
-
-### 2. Hashes (Objects)
-
-```bash
-# Store user object
-HSET user:1 name "John" email "john@example.com" age 30
-HGET user:1 name            # Get single field
-HGETALL user:1              # Get all fields
-HMGET user:1 name email     # Get multiple fields
-HINCRBY user:1 age 1        # Increment age
-HDEL user:1 age             # Delete field
-```
-
-###  3. Lists (Queues)
-
-```bash
-# Push to list
-LPUSH queue:tasks "task1"   # Push left (front)
-RPUSH queue:tasks "task2"   # Push right (back)
-
-# Pop from list
-LPOP queue:tasks            # Pop from front
-RPOP queue:tasks            # Pop from back
-BLPOP queue:tasks 0         # Blocking pop (wait forever)
-
-# Get elements
-LRANGE queue:tasks 0 -1     # Get all elements
-LLEN queue:tasks            # Get length
-```
-
-### 4. Sets (Unique Values)
-
-```bash
-# Add members
-SADD tags "nodejs" "redis" "database"
-
-# Check membership
-SISMEMBER tags "nodejs"     # Returns 1 if exists
-
-# Get members
-SMEMBERS tags               # Get all members
-SCARD tags                  # Get count
-
-# Set operations
-SADD set1 "a" "b" "c"
-SADD set2 "b" "c" "d"
-SINTER set1 set2            # Intersection: ["b", "c"]
-SUNION set1 set2            # Union: ["a", "b", "c", "d"]
-SDIFF set1 set2             # Difference: ["a"]
-```
-
-### 5. Sorted Sets (Ranked Data)
-
-```bash
-# Add members with scores
-ZADD leaderboard 100 "player1" 200 "player2" 150 "player3"
-
-# Get by rank
-ZRANGE leaderboard 0 -1 WITHSCORES           # All, lowest to highest
-ZREVRANGE leaderboard 0 9 WITHSCORES         # Top 10, highest to lowest
-
-# Get by score
-ZRANGEBYSCORE leaderboard 100 200            # Score between 100-200
-
-# Get rank
-ZRANK leaderboard "player1"                  # Rank (0-indexed)
-ZREVRANK leaderboard "player1"               # Reverse rank
-
-# Increment score
-ZINCRBY leaderboard 50 "player1"             # Add 50 to player1's score
-
-# Get score
-ZSCORE leaderboard "player1"
-```
+**Rule of thumb**: Redis holds *derived, ephemeral, or hot* data. If losing it would
+cause data loss (not just a slow rebuild), it's in the wrong store.
 
 ---
 
-## Common Use Cases
+## 1. Data structures → pick by access pattern
 
-### 1. Caching
+| Structure | O(?) highlights | Use for |
+|---|---|---|
+| String | GET/SET O(1), INCR atomic | cache JSON, counters, flags |
+| Hash | HGET/HSET O(1) per field | objects you update field-by-field (avoid re-serializing) |
+| List | LPUSH/RPUSH O(1), LRANGE O(n) | simple FIFO/LIFO, recent-N feeds |
+| Set | SADD/SISMEMBER O(1) | membership, tags, unique visitors |
+| Sorted Set | ZADD O(log n), ZRANGE O(log n + m) | leaderboards, sliding windows, priority queues, time-series index |
+| Stream | XADD O(1), consumer groups | **durable** logs/queues with replay + ack |
+| Bitmap / HyperLogLog | O(1) | daily-active flags / approximate unique counts at tiny memory |
 
+**Hash vs String(JSON)**: use a Hash when you update individual fields often (no
+read-modify-write of the whole object). Use a JSON String when you always read/write
+the whole object and want it atomic in one key.
+
+---
+
+## 2. Caching — patterns and the traps that bite in production
+
+### Cache-aside (lazy loading) — the default
 ```typescript
 import Redis from 'ioredis'
+const redis = new Redis(process.env.REDIS_URL!)
 
-const redis = new Redis(process.env.REDIS_URL)
+async function getUser(id: number): Promise<User> {
+  const key = `user:${id}`
+  const cached = await redis.get(key)
+  if (cached) return JSON.parse(cached)
 
-async function getUser(id: number) {
-  const cacheKey = `user:${id}`
-
-  // Try cache first
-  const cached = await redis.get(cacheKey)
-  if (cached) {
-    return JSON.parse(cached)
-  }
-
-  // Cache miss - fetch from database
-  const user = await db.user.findUnique({ where: { id } })
-
-  // Store in cache for 1 hour
-  await redis.setex(cacheKey, 3600, JSON.stringify(user))
-
+  const user = await db.user.findUniqueOrThrow({ where: { id } })
+  // SET with TTL + jitter (see stampede below). NX avoids clobbering a fresher write.
+  await redis.set(key, JSON.stringify(user), 'EX', ttlWithJitter(3600))
   return user
 }
-
-// Invalidate cache on update
-async function updateUser(id: number, data: any) {
-  await db.user.update({ where: { id }, data })
-
-  // Clear cache
-  await redis.del(`user:${id}`)
-}
 ```
 
-### 2. Session Storage
+### Invalidation — the hard part
+- **Write-through the cache on update, or delete the key.** Prefer **delete** (simpler,
+  avoids caching a half-built object): `await redis.del(`user:${id}`)` after the DB write.
+- Delete **after** the DB commit, not before — deleting first opens a race where a
+  concurrent read repopulates stale data.
+- Never trust a cache you can't invalidate. If invalidation is impossible, use a short TTL.
 
-```typescript
-import session from 'express-session'
-import RedisStore from 'connect-redis'
-import { createClient } from 'redis'
+### Cache stampede / thundering herd (the classic outage)
+When a hot key expires, thousands of requests miss at once and hammer the DB.
+Three defenses, use together:
 
-const redisClient = createClient({ url: process.env.REDIS_URL })
-await redisClient.connect()
-
-app.use(
-  session({
-    store: new RedisStore({ client: redisClient }),
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: process.env.NODE_ENV === 'production',
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
-    }
-  })
-)
-
-// Use session
-app.post('/login', (req, res) => {
-  req.session.userId = user.id
-  res.json({ success: true })
-})
-
-app.get('/profile', (req, res) => {
-  if (!req.session.userId) {
-    return res.status(401).json({ error: 'Not authenticated' })
-  }
-  // ...
-})
-```
-
-### 3. Rate Limiting
-
-```typescript
-async function checkRateLimit(ip: string): Promise<boolean> {
-  const key = `rate_limit:${ip}`
-
-  // Increment counter
-  const requests = await redis.incr(key)
-
-  // Set expiration on first request
-  if (requests === 1) {
-    await redis.expire(key, 60) // 1 minute window
-  }
-
-  // Check if limit exceeded
-  const limit = 100 // 100 requests per minute
-  return requests <= limit
-}
-
-// Use in middleware
-app.use(async (req, res, next) => {
-  const allowed = await checkRateLimit(req.ip)
-
-  if (!allowed) {
-    return res.status(429).json({ error: 'Too many requests' })
-  }
-
-  next()
-})
-
-// Sliding window rate limit (more accurate)
-async function slidingWindowRateLimit(key: string, limit: number, window: number) {
-  const now = Date.now()
-  const windowStart = now - window * 1000
-
-  // Remove old entries
-  await redis.zremrangebyscore(key, 0, windowStart)
-
-  // Count requests in current window
-  const count = await redis.zcard(key)
-
-  if (count >= limit) {
-    return false
-  }
-
-  // Add current request
-  await redis.zadd(key, now, `${now}`)
-  await redis.expire(key, window)
-
-  return true
-}
-```
-
-### 4. Pub/Sub (Real-Time Messaging)
-
-```typescript
-import Redis from 'ioredis'
-
-// Publisher
-const publisher = new Redis()
-
-// Publish message
-await publisher.publish('notifications', JSON.stringify({
-  userId: 123,
-  message: 'You have a new message'
-}))
-
-// Subscriber
-const subscriber = new Redis()
-
-subscriber.subscribe('notifications', (err, count) => {
-  console.log(`Subscribed to ${count} channel(s)`)
-})
-
-subscriber.on('message', (channel, message) => {
-  console.log(`Received from ${channel}:`, message)
-  const data = JSON.parse(message)
-
-  // Handle notification (e.g., send to WebSocket clients)
-  io.to(data.userId).emit('notification', data)
-})
-
-// Unsubscribe
-subscriber.unsubscribe('notifications')
-```
-
-### 5. Job Queue (Bull/BullMQ)
-
-```typescript
-import { Queue, Worker } from 'bullmq'
-
-// Create queue
-const emailQueue = new Queue('emails', {
-  connection: {
-    host: 'localhost',
-    port: 6379
-  }
-})
-
-// Add job
-await emailQueue.add('send-welcome', {
-  email: 'user@example.com',
-  name: 'John'
-})
-
-// Process jobs
-const worker = new Worker('emails', async job => {
-  if (job.name === 'send-welcome') {
-    await sendWelcomeEmail(job.data.email, job.data.name)
-  }
-}, {
-  connection: {
-    host: 'localhost',
-    port: 6379
-  }
-})
-
-worker.on('completed', job => {
-  console.log(`Job ${job.id} completed`)
-})
-
-worker.on('failed', (job, err) => {
-  console.error(`Job ${job.id} failed:`, err)
-})
-```
-
-### 6. Leaderboard
-
-```typescript
-// Add score
-async function updateScore(playerId: string, score: number) {
-  await redis.zadd('leaderboard', score, playerId)
-}
-
-// Get top 10
-async function getTopPlayers(limit = 10) {
-  const players = await redis.zrevrange('leaderboard', 0, limit - 1, 'WITHSCORES')
-
-  // Format: [player1, score1, player2, score2, ...]
-  const leaderboard = []
-  for (let i = 0; i < players.length; i += 2) {
-    leaderboard.push({
-      playerId: players[i],
-      score: parseInt(players[i + 1]),
-      rank: i / 2 + 1
-    })
-  }
-
-  return leaderboard
-}
-
-// Get player rank
-async function getPlayerRank(playerId: string) {
-  const rank = await redis.zrevrank('leaderboard', playerId)
-  const score = await redis.zscore('leaderboard', playerId)
-
-  return {
-    playerId,
-    rank: rank !== null ? rank + 1 : null,
-    score: score ? parseInt(score) : 0
-  }
-}
-```
+1. **TTL jitter** — spread expiries so keys don't die in lockstep:
+   ```typescript
+   const ttlWithJitter = (base: number) => base + Math.floor(Math.random() * base * 0.1)
+   ```
+2. **Single-flight lock** — only one caller rebuilds; others wait or serve stale:
+   ```typescript
+   async function getWithLock(key: string, rebuild: () => Promise<string>, ttl: number) {
+     const hit = await redis.get(key)
+     if (hit) return hit
+     const lockKey = `lock:${key}`
+     const gotLock = await redis.set(lockKey, '1', 'NX', 'PX', 5000)
+     if (!gotLock) {                       // someone else is rebuilding
+       await sleep(50)
+       return getWithLock(key, rebuild, ttl)   // retry (add a bounded attempt count)
+     }
+     try {
+       const fresh = await rebuild()
+       await redis.set(key, fresh, 'EX', ttlWithJitter(ttl))
+       return fresh
+     } finally {
+       await redis.del(lockKey)
+     }
+   }
+   ```
+3. **Serve-stale-while-revalidate** — store `{value, softExpireAt}`; past soft-expire,
+   return the stale value immediately and refresh in the background.
 
 ---
 
-## Best Practices
+## 3. Atomicity — MULTI, WATCH, and Lua
 
-### 1. Use Connection Pooling
+Individual commands are atomic. **Multi-step** logic (read-then-write) is NOT — you need
+a transaction or a script.
 
+- **Pipeline** = batching for fewer round-trips (NOT atomic, NOT isolated):
+  ```typescript
+  await redis.pipeline().set('a', 1).incr('b').get('c').exec()
+  ```
+- **MULTI/EXEC** = queued commands run atomically. Use **WATCH** for optimistic locking
+  (aborts if the watched key changed).
+- **Lua script (EVAL)** = atomic read-modify-write in one round trip. Preferred for
+  correctness-critical ops (rate limits, conditional decrements, atomic dequeue):
+  ```typescript
+  // Atomic "decrement stock if available" — no race between check and write
+  const buy = `
+    local n = tonumber(redis.call('GET', KEYS[1]) or '0')
+    if n <= 0 then return -1 end
+    return redis.call('DECR', KEYS[1])`
+  const left = await redis.eval(buy, 1, `stock:${sku}`)   // -1 = sold out
+  ```
+
+---
+
+## 4. Rate limiting
+
+**Fixed window (cheap, bursty at boundaries):**
 ```typescript
-import Redis from 'ioredis'
-
-// Single instance for simple cases
-export const redis = new Redis(process.env.REDIS_URL)
-
-// Cluster for high availability
-export const redis = new Redis.Cluster([
-  { host: 'node1', port: 6379 },
-  { host: 'node2', port: 6379 },
-  { host: 'node3', port: 6379 }
-])
-```
-
-### 2. Use Proper Key Naming
-
-```bash
-# Good: Hierarchical, descriptive
-user:123:profile
-user:123:sessions:abc
-cache:product:456
-queue:emails
-rate_limit:api:192.168.1.1
-
-# Bad: Unclear, no structure
-u123
-data
-temp
-```
-
-### 3. Set Expiration on Keys
-
-```typescript
-// Always set TTL to prevent memory leak
-await redis.setex('key', 3600, 'value')  // 1 hour
-
-// Or use EXPIRE
-await redis.set('key', 'value')
-await redis.expire('key', 3600)
-
-// Check for keys without TTL
-// (In production, monitor this)
-const keys = await redis.keys('*')
-for (const key of keys) {
-  const ttl = await redis.ttl(key)
-  if (ttl === -1) {
-    console.warn(`Key without TTL: ${key}`)
-  }
+async function fixedWindow(id: string, limit = 100, windowSec = 60) {
+  const key = `rl:${id}:${Math.floor(Date.now() / 1000 / windowSec)}`
+  const n = await redis.incr(key)
+  if (n === 1) await redis.expire(key, windowSec)
+  return n <= limit
 }
 ```
+**Sliding window (accurate, more memory)** — Sorted Set of timestamps, atomic via Lua in
+production to avoid the check-then-act race. Keep the zset trimmed with `ZREMRANGEBYSCORE`.
 
-### 4. Use Pipelines for Multiple Commands
+For serious use, prefer a vetted lib (`rate-limiter-flexible`) — it ships the Lua and edge cases.
+
+---
+
+## 5. Pub/Sub vs Streams — don't confuse them
+
+| | Pub/Sub | Streams (XADD + consumer groups) |
+|---|---|---|
+| Delivery | fire-and-forget; offline subscribers miss messages | durable; replay from any offset |
+| Ack / retry | none | per-message ACK, pending list, auto-claim |
+| Fan-out | all subscribers | consumer groups load-balance |
+| Use for | live notifications, cache-invalidation signals, presence | job queues, event sourcing, at-least-once pipelines |
+
+**Pub/Sub** for "notify anyone who's listening right now" (and to sync WebSocket servers —
+see [[real-time-systems]]). **Streams** when a missed message is a bug.
 
 ```typescript
-// Without pipeline (slow - multiple round trips)
-await redis.set('key1', 'value1')
-await redis.set('key2', 'value2')
-await redis.set('key3', 'value3')
-
-// With pipeline (fast - single round trip)
-const pipeline = redis.pipeline()
-pipeline.set('key1', 'value1')
-pipeline.set('key2', 'value2')
-pipeline.set('key3', 'value3')
-await pipeline.exec()
+// Stream producer
+await redis.xadd('events', '*', 'type', 'order.paid', 'orderId', String(id))
+// Consumer group (durable, load-balanced, ack'd)
+await redis.xgroup('CREATE', 'events', 'workers', '$', 'MKSTREAM').catch(() => {})
+const res = await redis.xreadgroup('GROUP', 'workers', 'c1', 'COUNT', 10, 'BLOCK', 5000, 'STREAMS', 'events', '>')
+// ... process ... then: await redis.xack('events', 'workers', id)
 ```
+For app-level job queues on top of this, **BullMQ** is the batteries-included choice.
 
-### 5. Handle Connection Errors
+---
+
+## 6. Distributed locks — correctness warning
+
+`SET lock NX PX 30000` gives a simple lock, BUT it is **not safe** as the sole guard for
+correctness across failures (clock skew, GC pause, lock expiring mid-work). Rules:
+
+- Always set a TTL (`PX`) so a crashed holder can't deadlock forever.
+- Release only if you own it — check-and-del must be atomic (Lua comparing a random token):
+  ```typescript
+  const token = crypto.randomUUID()
+  await redis.set(lockKey, token, 'NX', 'PX', 30000)
+  // release:
+  const rel = `if redis.call('GET',KEYS[1])==ARGV[1] then return redis.call('DEL',KEYS[1]) else return 0 end`
+  await redis.eval(rel, 1, lockKey, token)
+  ```
+- For **mutual exclusion / performance** (avoid double work): this is fine.
+- For **correctness** (money, inventory) where double-execution is unacceptable: do NOT
+  rely on the lock alone — make the protected operation idempotent or transactional in
+  Postgres. Redlock across N nodes reduces risk but is debated; don't assume it's bulletproof.
+
+---
+
+## 7. Memory, eviction, persistence, clustering
+
+- **Always set TTLs.** A key without a TTL lives forever → slow memory leak. Audit with
+  `redis-cli --scan` + `TTL`. Never run `KEYS *` in prod (blocks the server) — use `SCAN`.
+- **Eviction policy** (`maxmemory-policy`): for a pure cache use `allkeys-lru` (or
+  `allkeys-lfu`); for a mixed store use `volatile-lru` so only TTL'd keys get evicted.
+- **Big keys / hot keys** kill you: a single 50MB list or a key taking 90% of traffic
+  creates latency spikes and uneven cluster shards. Split them; monitor with `redis-cli --bigkeys`.
+- **Persistence**: RDB = periodic snapshot (fast restart, can lose seconds); AOF
+  (`appendfsync everysec`) = durable to ~1s. Cache-only? You can disable both. Source of
+  truth? Use AOF + replication — but really, don't make Redis your source of truth.
+- **HA**: single node = SPOF. Use Sentinel (failover) or Cluster (sharding). In Cluster,
+  multi-key ops must share a hash slot — use `{tag}` hash-tags: `user:{123}:profile`.
+
+---
+
+## 8. Connection & client hygiene (ioredis)
 
 ```typescript
-redis.on('error', (err) => {
-  console.error('Redis error:', err)
+export const redis = new Redis(process.env.REDIS_URL!, {
+  maxRetriesPerRequest: 3,
+  enableReadyCheck: true,
+  retryStrategy: (times) => Math.min(times * 200, 2000),
 })
-
-redis.on('connect', () => {
-  console.log('Redis connected')
-})
-
-redis.on('reconnecting', () => {
-  console.log('Redis reconnecting')
-})
+redis.on('error', (e) => logger.error({ err: e }, 'redis error'))  // never crash on transient errors
 ```
+- **Reuse one client** (or a small pool) per process — don't create a client per request.
+- **Pub/Sub needs its own connections**: a subscriber connection can't run normal commands.
+  Use separate `pub` and `sub` instances.
+- Set timeouts; a hung Redis call must not hang the request — wrap hot paths with a
+  fallback to the DB (cache is an optimization, not a dependency for correctness).
 
 ---
 
-## Monitoring
+## 9. Key naming & pitfalls
 
-```bash
-# Redis CLI
-redis-cli
-
-# Monitor all commands (debug only)
-MONITOR
-
-# Get info
-INFO
-INFO memory
-INFO stats
-
-# Get memory usage of key
-MEMORY USAGE key
-
-# Get all keys (NEVER use in production on large datasets)
-KEYS *
-
-# Better: Use SCAN
-SCAN 0 MATCH user:* COUNT 100
 ```
+✅ user:123:profile   session:abc   cache:product:456   rl:api:1.2.3.4   {order:99}:items
+❌ u123   data   temp   (no namespace, no structure)
+```
+
+**Top production pitfalls**
+- ❌ `KEYS *` in prod → use `SCAN`.
+- ❌ Keys with no TTL → memory creep.
+- ❌ Caching without an invalidation story → stale data forever.
+- ❌ Read-then-write without Lua/WATCH → lost updates under concurrency.
+- ❌ Pub/Sub where you needed durability → silent message loss (use Streams).
+- ❌ Treating a `SET NX` lock as a correctness guarantee → double execution.
+- ❌ One giant key / hot key → latency spikes, unbalanced cluster.
+- ❌ Cache in the request-critical path with no DB fallback → Redis down = app down.
 
 ---
 
-## Persistence Options
+## 10. Quick self-check before shipping Redis code
 
-```conf
-# redis.conf
+1. Does every key have a TTL (or a deliberate reason not to)?
+2. Is there a clear invalidation path for every cache?
+3. Are multi-step mutations atomic (Lua/MULTI), not check-then-act?
+4. Is the right primitive chosen (Streams vs Pub/Sub; Sorted Set vs List)?
+5. Does the app still work (slower) if Redis is briefly down?
+6. No `KEYS`, no unbounded lists, no giant values?
+7. Separate connections for Pub/Sub; single shared client elsewhere?
 
-# RDB (snapshot) - save every 60 seconds if at least 1000 keys changed
-save 60 1000
-
-# AOF (append-only file) - log every write operation
-appendonly yes
-appendfsync everysec
-
-# Use both for maximum durability
-```
-
----
-
-**Remember**: Redis is fast but uses memory. Set expiration on keys, use proper data structures, and monitor memory usage.
-
-**Created**: 2026-02-04
-**Maintained By**: Netflix Backend Architect
-**Version**: Redis 7+
+Related: [[real-time-systems]] (Redis adapter for scaling WebSockets), [[node-backend]],
+[[postgresql]], [[microservices]].
