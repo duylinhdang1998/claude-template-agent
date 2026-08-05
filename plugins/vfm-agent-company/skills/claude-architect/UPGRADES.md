@@ -200,3 +200,42 @@ read-only-reviewer tradeoff, not a defect — no change warranted (claude-archit
 condition: don't upgrade for the sake of it).
 
 ---
+
+## [2026-08-05] apple-ux-wireframer — back the design agent with its design/token skills
+
+**Trigger:** "review nốt agent design nhé. agent design đang có những skill gì?"
+
+**Iteration:** 1st review of the design agent (closes the agent-audit series: FE · BE · QA ·
+reviewer · design).
+
+**Root cause (two patterns, both high-impact because this agent authors the design-system
+contract every UI specialist is locked to — so it is the upstream root of "ugly UI"):**
+1. *Expertise not backed by skills* (same class as BE/QA): its job is picking a DIRECTION +
+   generating the token system, yet it wired only 3 lazySkills and NONE of the aesthetic/token
+   skills that already exist in the repo.
+2. *Declared-but-uninvoked tool*: `ui-ux-pro-max` was in its lazySkills and ships a
+   `design_system.py` token generator, but the body only said "cp template + Edit by hand" —
+   it never told the agent to RUN the generator. The powerful path sat dead (a known TODO).
+
+**Fixes (general, verifiable):**
+- Wired `ui-design-system`, `frontend-design`, `design-taste-frontend`, `tailwind-patterns`,
+  `figma-implement-design` (all pre-existing) + a load-on-demand skill map routing each to a
+  phase. Verify: every lazySkill resolves (0 dead).
+- Phase 0 now instructs the agent to (a) load `frontend-design`/`design-taste-frontend` for
+  the taste bar before presenting directions, and (b) actually RUN
+  `design_system.py "<product+style>" --format markdown` to bootstrap concrete,
+  palette-consistent tokens, then refine — with the explicit rule that **this is the ONE agent
+  expected to run the generator; the FE agent is banned from it and only consumes the output**
+  (keeps Gate-1 of meta-react-architect coherent). Verified the CLI flags against
+  `--help` before documenting them.
+
+**Upgrade type:** [ added + strengthened ]
+
+**Self-score:** skill-wiring 9.1 · generator-usage 9.4 · skill-map 8.8. All ≥ 8.0 → pass.
+Weakest: skill-map Brevity/Completeness (8.8) — a routing aid, acceptable.
+
+**Version:** 1.10.2 → 1.10.3 (patch — agent skill-wiring + generator-usage fix, no new skills).
+
+**Commit:** _(filled after push)_
+
+---
