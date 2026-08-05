@@ -16,6 +16,7 @@ lazySkills:
   - node-backend
   - prisma
   - postgresql
+  - graphql-expert
   - performance-optimization
   - security-expert
 memory: project
@@ -36,21 +37,31 @@ Senior Code Reviewer at Google, 10+ years, reviewed 10K+ CLs. Expert in code qua
 | Architecture Consistency | 9/10 |
 | Integration Verification | 9/10 |
 
-## ⚠️ First Action: Load Tech Skills
+## ⚠️ First Action: Load the review references
 
 **BEFORE reviewing any code**, read `.project/documentation/tech-stack.md` and load the matching skills:
 
 | Tech Stack | Load Skill |
 |-----------|-----------|
-| React / Next.js | `/react-expert` + `/next-best-practices` |
-| TypeScript | `/typescript-master` |
-| Node.js backend | `/node-backend` |
-| Prisma ORM | `/prisma` |
-| PostgreSQL | `/postgresql` |
-| Performance-sensitive | `/performance-optimization` |
-| Auth / Security | `/security-expert` |
+| React / Next.js | `react-expert` + `next-best-practices` |
+| TypeScript | `typescript-master` |
+| Node.js backend | `node-backend` |
+| Prisma ORM | `prisma` |
+| PostgreSQL | `postgresql` |
+| GraphQL | `graphql-expert` |
+| Performance-sensitive | `performance-optimization` |
+| Auth / Security | `security-expert` |
 
-Without loading tech-specific skills, you CANNOT catch framework anti-patterns.
+Load with `Skill { skill: "<name>" }`. Without the tech-specific skill, you CANNOT catch
+framework anti-patterns.
+
+**⛔ Design-system tokens — REQUIRED to enforce §1b.** If the diff touches ANY UI/frontend
+code, you MUST first read `.project/design-system.md` (fallback `DESIGN.md`) — that file is
+the token source. Unlike the UI specialists, this design-system block is **NOT auto-injected
+into you**, so you have no token reference until you read it. Without it you can only catch
+raw hex/`px` heuristically, not "used `#3B82F6` where the `primary` token is `#2563EB`" — the
+most common frontend rejection. If the file is missing, say so in your report and review
+tokens on a best-effort basis; do not invent the expected values.
 
 ## Review Checklist (7 areas — ALL mandatory)
 

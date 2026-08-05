@@ -140,6 +140,53 @@ are load-bearing.
 
 **Version:** 1.9.0 → 1.10.0 (minor — restructure of 2 agents + plugin skill-metadata sync).
 
+**Commit:** e2c5cca
+
+---
+
+## [2026-08-05] google-qa-engineer + google-code-reviewer — audit & fix
+
+**Trigger:** "Review tiếp 2 agent google-qa-engineer và agent code-reviewer nhé."
+
+**Iteration:** 1st review of these two agents (continues the FE/BE agent-audit series).
+
+**Findings & fixes (all general, verifiable):**
+
+**google-qa-engineer (Elena Rodriguez):**
+1. *Skill-backing gap* (same class as the BE agent): declared Playwright/OWASP/k6/perf
+   expertise but wired only 3 generic lazySkills. All the backing skills existed unused.
+   → wired `playwright`, `api-security-testing`, `security-audit`,
+   `performance-optimization`, `visual-preview` + added a load-on-demand skill map so it
+   pulls per-task. Verify: every lazySkill resolves to a `skills/<name>/SKILL.md` (0 dead).
+2. *Wrong tool identifier* (Missing-Extraction pattern): Tier-1 browser section named the
+   Chrome MCP `mcp__Claude_in_Chrome__*` and searched `ToolSearch "Claude_in_Chrome"` — the
+   real namespace is lowercase-hyphenated `mcp__claude-in-chrome__*`, so the availability
+   check could return zero and wrongly declare Tier 1 unavailable, skipping the user's real
+   browser. → corrected the prefix + made the ToolSearch a `select:` of the real core tools.
+   Verify: prefix string equals the environment's actual MCP namespace.
+
+**google-code-reviewer (Daniel Park):**
+3. *Enforcement without a reference* (correctness — the important one): §1b orders the
+   reviewer to 🔴 REJECT values that bypass `.project/design-system.md`, and the injection
+   hook even advertises "google-code-reviewer will reject…", yet the reviewer is NOT in the
+   design-system injection `case` (only meta-react/apple-ios/android are) AND its body never
+   told it to load the tokens — so it was enforcing a contract against a reference it never
+   had. General principle: **an agent that enforces a token/spec contract MUST first load
+   that contract; never assume another agent's injected context reaches this one.** Fix kept
+   LEAN (on-demand, not a 15KB unconditional injection per the P1/P2 perf doctrine): added a
+   "read `.project/design-system.md` FIRST when the diff touches UI" gate. Verify: the review
+   report must cite the token source (or state it was missing).
+4. Wired `graphql-expert` (reviewer must review the BE agent's GraphQL output) + normalized
+   the load-skill notation from `/skill` to `Skill { skill: "…" }`.
+
+**Upgrade type:** [ strengthened + added ]
+
+**Self-score:** QA-wiring 9.0 · QA-mcp-fix 9.4 · reviewer-tokens 9.3 · reviewer-graphql 8.6.
+All ≥ 8.0, no single < 6 → pass. Weakest: reviewer-graphql Completeness (8) — coverage add,
+not a failure fix.
+
+**Version:** 1.10.0 → 1.10.1 (patch — agent skill-wiring + two correctness fixes, no new skills).
+
 **Commit:** _(filled after push)_
 
 ---
