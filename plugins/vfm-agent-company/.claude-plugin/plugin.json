@@ -1,7 +1,7 @@
 {
   "name": "vfm-agent-company",
-  "description": "Autonomous AI software company with CEO/CTO/PM/HR/BA + 17 FAANG specialists and a Google/Ahrefs/DataForSEO SEO division (18 SEO sub-agents + 25 SEO skills). BDD-driven development, sprint orchestration, mechanically-enforced frontend code standards (one-component-per-file hook + ESLint gate), a frontend visual-craft skill pack (ui-ux-pro-max design intelligence, frontend-design, shadcn/ui, Tailwind v4 patterns, Figma-to-code, design tokens) wired as on-demand lazySkills, validation gates, and Git auto-checkpointing.",
-  "version": "1.8.0",
+  "description": "Autonomous AI software company with CEO/CTO/PM/HR/BA + 17 FAANG specialists and a Google/Ahrefs/DataForSEO SEO division (18 SEO sub-agents + 25 SEO skills). BDD-driven development, sprint orchestration, mechanically-enforced frontend code standards (one-component-per-file hook + ESLint gate), a frontend visual-craft skill pack (ui-ux-pro-max design intelligence, frontend-design, shadcn/ui, Tailwind v4 patterns, Figma-to-code, design tokens) and a backend skill pack (API/DB design, PostgreSQL + optimization, Redis, real-time WS/SSE, GraphQL, API security/audit, Docker, observability) wired as on-demand lazySkills, validation gates, and Git auto-checkpointing.",
+  "version": "1.9.0",
   "author": {
     "name": "Dang Duy Linh",
     "email": "duylinhdang1998@users.noreply.github.com"
