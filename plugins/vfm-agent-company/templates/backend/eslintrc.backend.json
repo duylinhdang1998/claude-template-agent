@@ -1,0 +1,65 @@
+{
+  "//": "VFM Backend Code Standards — Node/TypeScript specific. MERGE ORDER: templates/shared/eslintrc.conventions.json FIRST (naming, imports, max-lines 300, max-lines-per-function 30, clean-code metrics), THEN this file on top. `npm run lint` MUST pass before a backend task is marked complete. See helpers/code-quality.md → 'Backend Code Standards'.",
+  "//requires": "Type-aware rules below need parserOptions.project pointing at your tsconfig: { \"parserOptions\": { \"project\": \"./tsconfig.json\" } }. Without it ESLint errors on no-floating-promises / await-thenable / require-await — set those to \"off\" rather than deleting the file if you cannot enable type-aware linting.",
+  "//verify": "npx eslint --print-config src/<any>.ts | grep -E 'no-floating-promises|max-lines|naming-convention' — all MUST appear.",
+  "//covers": "Standards B1 (thin route/controller — via no-restricted-imports below), B4 (typed errors / no swallowed rejections), B5 (no any at the boundary). B2 (single-source enums/constants) and B3 (reusable validation schema) have NO lint rule — google-code-reviewer §1c is their only gate.",
+  "rules": {
+    "@typescript-eslint/no-floating-promises": "error",
+    "@typescript-eslint/await-thenable": "error",
+    "@typescript-eslint/require-await": "error",
+    "@typescript-eslint/no-misused-promises": "error",
+    "no-return-await": "off",
+    "@typescript-eslint/return-await": ["error", "in-try-catch"],
+    "no-throw-literal": "off",
+    "@typescript-eslint/only-throw-error": "error",
+    "no-empty": ["error", { "allowEmptyCatch": false }]
+  },
+  "overrides": [
+    {
+      "//": "B1 — the route/controller layer stays THIN: it parses input, calls a service, shapes the response. It MUST NOT talk to the database or hold business logic. Adjust the globs and the restricted paths to this project's layer names; keep the RULE.",
+      "files": ["**/*.controller.ts", "**/*.route.ts", "**/routes/**/*.ts", "**/app/api/**/route.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              { "group": ["**/*.repository", "**/*.repository.*", "**/repositories/*"], "message": "B1: the route/controller layer MUST NOT reach the repository directly. Go through a service." },
+              { "group": ["@prisma/client", "**/prisma", "**/db", "**/drizzle*", "typeorm", "mongoose"], "message": "B1: no direct DB/ORM access from the route layer. Move the query into a service or repository." }
+            ]
+          }
+        ],
+        "max-lines-per-function": ["error", { "max": 30, "skipBlankLines": true, "skipComments": true }]
+      }
+    },
+    {
+      "//": "The repository layer is the ONLY place allowed to import the ORM/DB client.",
+      "files": ["**/*.service.ts", "**/services/**/*.ts"],
+      "rules": {
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              { "group": ["**/*.controller", "**/*.controller.*", "**/routes/*"], "message": "B1: a service MUST NOT import the route/controller layer — dependencies point inward only." }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "//": "Config is the one place process.env may be read; everywhere else consumes the typed config object.",
+      "files": ["**/*.ts"],
+      "excludedFiles": ["**/config/**", "**/*.config.ts", "**/env.ts", "*.test.*", "*.spec.*"],
+      "rules": {
+        "no-restricted-properties": [
+          "error",
+          { "object": "process", "property": "env", "message": "Read env vars once in the config module, validate them there, and import the typed config. Scattered process.env reads have no validation and no single source of truth." }
+        ]
+      }
+    },
+    {
+      "//": "Tests, migrations and seeds are exempt from size/magic-number limits.",
+      "files": ["*.test.*", "*.spec.*", "**/__tests__/**", "**/migrations/**", "**/seed*.ts"],
+      "rules": { "max-lines": "off", "max-lines-per-function": "off", "no-magic-numbers": "off", "@typescript-eslint/no-explicit-any": "off" }
+    }
+  ]
+}

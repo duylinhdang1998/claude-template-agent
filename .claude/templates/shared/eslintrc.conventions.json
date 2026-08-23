@@ -1,0 +1,159 @@
+{
+  "//": "VFM Universal Code Conventions — MANDATORY for EVERY TypeScript/JavaScript project, frontend AND backend. Merge into the project's ESLint config, then merge the area-specific file on top (templates/frontend/eslintrc.frontend.json or templates/backend/eslintrc.backend.json). These are the naming/import/safety conventions that used to live only as a prose table in core/cto.md — a convention nobody lints is a convention that drifts.",
+  "//requires": "npm i -D @typescript-eslint/eslint-plugin @typescript-eslint/parser",
+  "//verify": "After merging: `npx eslint --print-config <any-source-file> | grep naming-convention` MUST return a match. A gate you did not grep for is a gate you do not have.",
+  "//optional": {
+    "note": "These need extra plugins. Enable them if the plugin is present — do NOT paste them in without installing, ESLint fails on an unknown rule id.",
+    "import/order": "npm i -D eslint-plugin-import — then add: \"import/order\": [\"error\", { \"groups\": [\"builtin\",\"external\",\"internal\",\"parent\",\"sibling\",\"index\",\"type\"], \"newlines-between\": \"always\", \"alphabetize\": { \"order\": \"asc\", \"caseInsensitive\": true } }]",
+    "unicorn/filename-case": "npm i -D eslint-plugin-unicorn — file naming is otherwise checked by google-code-reviewer §1 (PascalCase components, kebab/camelCase utils, use* hooks)"
+  },
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "rules": {
+    "@typescript-eslint/naming-convention": [
+      "error",
+      {
+        "selector": "default",
+        "format": [
+          "camelCase"
+        ],
+        "leadingUnderscore": "allow"
+      },
+      {
+        "selector": "variable",
+        "format": [
+          "camelCase",
+          "UPPER_CASE",
+          "PascalCase"
+        ],
+        "leadingUnderscore": "allow"
+      },
+      {
+        "selector": "parameter",
+        "format": [
+          "camelCase"
+        ],
+        "leadingUnderscore": "allow"
+      },
+      {
+        "selector": "function",
+        "format": [
+          "camelCase",
+          "PascalCase"
+        ]
+      },
+      {
+        "selector": "typeLike",
+        "format": [
+          "PascalCase"
+        ]
+      },
+      {
+        "selector": "enumMember",
+        "format": [
+          "UPPER_CASE",
+          "PascalCase"
+        ]
+      },
+      {
+        "selector": "objectLiteralProperty",
+        "format": null
+      },
+      {
+        "selector": "typeProperty",
+        "format": null
+      },
+      {
+        "selector": "import",
+        "format": [
+          "camelCase",
+          "PascalCase"
+        ]
+      }
+    ],
+    "@typescript-eslint/consistent-type-imports": [
+      "error",
+      {
+        "prefer": "type-imports",
+        "fixStyle": "inline-type-imports"
+      }
+    ],
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ],
+    "no-magic-numbers": [
+      "warn",
+      {
+        "ignore": [
+          -1,
+          0,
+          1,
+          2,
+          100
+        ],
+        "ignoreArrayIndexes": true,
+        "enforceConst": true,
+        "detectObjects": false
+      }
+    ],
+    "prefer-const": "error",
+    "no-var": "error",
+    "eqeqeq": [
+      "error",
+      "smart"
+    ],
+    "curly": [
+      "error",
+      "multi-line"
+    ],
+    "no-console": [
+      "warn",
+      {
+        "allow": [
+          "warn",
+          "error"
+        ]
+      }
+    ],
+    "max-lines": [
+      "error",
+      {
+        "max": 300,
+        "skipBlankLines": true,
+        "skipComments": true
+      }
+    ],
+    "max-lines-per-function": [
+      "warn",
+      {
+        "max": 30,
+        "skipBlankLines": true,
+        "skipComments": true,
+        "IIFEs": true
+      }
+    ],
+    "max-params": [
+      "warn",
+      4
+    ],
+    "max-nested-callbacks": [
+      "warn",
+      3
+    ],
+    "max-depth": [
+      "warn",
+      4
+    ],
+    "complexity": [
+      "warn",
+      10
+    ]
+  },
+  "//limits": "max-lines 300 / max-lines-per-function 30 are the SAME numbers as helpers/code-quality.md (one threshold, not two). max-params 4 / max-nested-callbacks 3 / complexity 10 / max-depth 4 encode that file's 'Code Smells to Avoid' list. On an existing codebase already in violation: set the offending rule to 'warn', keep a burn-down list, restore 'error' at zero. Deleting a rule to make lint green is a regression, not a fix."
+}

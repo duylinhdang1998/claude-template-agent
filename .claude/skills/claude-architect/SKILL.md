@@ -89,6 +89,31 @@ Edit the target `SKILL.md` (or `agents/*.md` or `core/*.md` if upgrading an agen
 
 **Multi-skill upgrades are allowed** if the root cause affects multiple skills (e.g., extraction discipline affects both `clone-website` and any future `clone-app` skill).
 
+#### ⛔ Mirror to BOTH runtimes — every time, no exceptions
+
+The framework ships two copies of itself:
+
+| Copy | Active when |
+|---|---|
+| `.claude/` | working directly inside this repo (`.claude/settings.json` registers the hooks) |
+| `plugins/vfm-agent-company/` | installed via the marketplace (`hooks/hooks.json` registers the hooks) |
+
+An edit applied to one side only is **enforced in one runtime and decorative in the other** —
+and nothing surfaces the difference, so it survives indefinitely. This has already happened:
+commit `74ba59f` shipped the `/go` self-check to all 11 agent files on **both** sides but put
+the hook that audits it (`subagent-verify-go.sh`) in the **plugin registry only**, leaving the
+`.claude/` runtime with a MANDATORY rule that nothing checked.
+
+**A feature is not applied until its instruction half AND its enforcement half exist on both
+sides.** After every upgrade that touches an agent, helper, template or hook, run:
+
+```bash
+bash .claude/scripts/check-hook-registry-drift.sh    # exits 1 on drift, names the gap
+for f in <every file you changed>; do diff -q ".claude/$f" "plugins/vfm-agent-company/$f"; done
+```
+
+Do not bump the version or commit while either check reports a difference.
+
 ### Step 5 — Bump Version
 
 Every upgrade MUST bump the plugin patch version in BOTH files:

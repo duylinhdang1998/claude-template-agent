@@ -270,3 +270,265 @@ token dimension the design agent can choose MUST have (a) a slot in the design-s
 and (b) a matching check in the reviewer — otherwise it's advice, not a contract.
 
 ---
+
+## [2026-08-23] google-code-reviewer — Measurable rules must be measured, not judged
+
+**Trigger (user report):**
+> PM re-checked a review that google-code-reviewer had already returned and found 3 misses:
+> (a) an options constant copied **verbatim into 3 files** — past the "3+ → must extract"
+> threshold — where the reviewer's own suggestion moved one copy to a shared file and left
+> the other three in place; (b) two label maps duplicating existing badge components and
+> **already drifted** (same key → different user-visible strings on different screens),
+> never mentioned; (c) no function-length check and no god-file finding on a **1035-line**
+> file, 3.4× the 300-line limit. Reviewer had also filed the split as MAJOR #2 with the note
+> "bigger job, do later". PM: only 2 of 4 frontend rules have a real gate; the rest are prose.
+
+**Iteration count:** 3rd+ in this class. The previous entry (1.10.5) closed the same shape of
+hole for motion tokens and stated the principle *"a dimension with no matching reviewer check
+is advice, not a contract."* It was applied to one dimension; the hole is structural.
+
+**Root cause:**
+Four distinct defects, one pattern — **the reviewer was asked to judge properties it had no
+procedure to observe.**
+1. *Cross-file property judged from one file.* DRY / "extract shared logic" / duplication are
+   repo-wide facts. All 7 checklist areas were phrased as inspection of the file at hand, and
+   nothing told the reviewer to use its `Grep` tool to look outward. Both (a) and (b) are
+   invisible from inside the reviewed file — so the check could never fire, however diligent
+   the agent.
+2. *Numeric threshold with no measurement step.* "functions <30 lines", "no god files" were
+   stated as prose questions. Nothing said to run `wc -l` or enumerate function spans, so the
+   answer defaulted to impression, and a 1035-line file passed as merely "large".
+3. *Contradictory thresholds.* `code-quality.md` said "Max 300 lines" in one table and
+   "God files (500+ lines)" in another — two numbers for one limit invites the looser reading.
+4. *Severity assigned by rule identity, not by consequence.* Rule #3 was hardcoded 🟡, so
+   duplication stayed MINOR even when the copies had **diverged** — which is a behaviour
+   defect, not a style nit. Compounded by grading on fix-cost ("bigger job, do later"), which
+   converts a blocking finding into a permanent one.
+5. *Enforcement claimed but not verified.* `code-quality.md` advertised "three layers, NOT just
+   prose"; in truth the hook covers standard #1 alone, the ESLint template covered #1 + #4 (and
+   #4 only at `warn`, so `npm run lint` still exited 0), nothing at all covered #3 or file size,
+   and **nothing in the framework installs the ESLint template** — it was prose in two agent
+   files. Neither the FE agent nor the reviewer ever checked whether the gate existed.
+
+**Upgrade type:** [ added + strengthened + deleted-conflict ]
+
+**Files touched:**
+- `.claude/agents/google-code-reviewer.md` (+55) — new mandatory **Measurement Pass (M1–M5)**
+  before any grading; checklist §1/§1b/§2 re-pointed at those numbers; severity-by-consequence
+  rule; report must open with the measurements
+- `.claude/helpers/code-quality.md` (+30/−12) — coverage table stating which layer actually
+  enforces each standard; 500-line contradiction removed; lint layer marked opt-in-and-unverified
+- `.claude/templates/frontend/eslintrc.frontend.json` (+12) — `max-lines` (300, error) and
+  `max-lines-per-function` (30, warn) added; static-inline-style rule `warn` → `error`;
+  burn-down migration note for codebases already in violation
+- `.claude/agents/meta-react-architect.md` (+12) — must grep-verify the merged rule ids landed;
+  explicit ban on deleting a rule to make lint green
+- mirrored to `plugins/vfm-agent-company/**`; version 1.9.0 → 1.9.1
+
+**General principles added:**
+1. A rule whose subject spans more than the file under review MUST carry an outward search
+   procedure; searching by identifier alone is insufficient because copies get renamed, so the
+   search MUST also run on a distinctive literal from the declaration's body.
+2. A rule containing a number MUST carry the command that produces that number, and the review
+   MUST publish the raw value. An area with no number cannot be marked pass.
+3. Severity is a function of consequence, never of which rule was broken and never of how large
+   the fix is. Duplicated definitions that have diverged are always blocking; fix-cost is the
+   scheduler's input, not the grader's.
+4. A proposal that relocates one of N duplicates is not a fix — the fix is one definition,
+   N−1 deletions, N−1 imports.
+5. Every standard MUST declare which layer actually enforces it; where the only layer is human
+   review, the review IS the gate and must be graded mechanically. A claimed gate MUST be
+   verified by grepping for it — by the agent that installs it AND by the reviewer — and a
+   missing gate is a finding in its own right.
+
+**Verification mechanism:**
+M1 `wc -l` per changed file (>300 = 🔴) · M2 function spans (>30 lines = 🟡, 3 longest reported)
+· M3 `grep -rn` on both identifier and distinctive body literal, occurrence count reported
+(≥3 = 🔴) · M4 key-by-key diff of duplicate copies (any differing value = 🔴 MAJOR) ·
+M5 `grep -rE` the project ESLint config for all four required rule ids (missing = 🔴).
+
+**Self-score:**
+```
+  1. Specificity Avoidance  : 10/10   (no project/file/brand nouns in any rule body)
+  2. Verifiability          : 10/10   (each of M1–M5 is a runnable command with a numeric verdict)
+  3. Placement              :  9/10   (Measurement Pass sits above the checklist, after skill-loading)
+  4. Clarity                :  9/10   (MUST/never; thresholds single-valued after the 500 removal)
+  5. Completeness           :  9/10   (covers siblings: renamed copies, drifted copies, partial
+                                       relocation, fix-cost downgrading, absent gate)
+  6. Anti-Regression Power  :  9/10   (all three reported misses become mechanically detectable;
+                                       two also gain a lint gate)
+  7. Brevity                :  7/10   (+55 lines on the reviewer — the table carries most of it)
+  8. Evidence Grounding     : 10/10   (each rule maps to a numbered defect in this entry)
+  9. Consistency            :  9/10   (resolves the 300/500 conflict rather than adding to it)
+ 10. Actionability          : 10/10   (commands are copy-pasteable; verdicts are thresholds)
+────────────────────────────────
+ Overall                    : 9.2/10
+```
+Weakest: **Brevity 7/10** — the Measurement Pass adds real length to the reviewer prompt.
+Accepted: the misses were caused by absent procedure, and procedure cannot be compressed to a
+slogan without becoming prose again — which is the exact failure being fixed.
+
+**Open item (not fixed here):** nothing in `automation/init-project.sh` copies
+`eslintrc.frontend.json` into a new project; installation is still an instruction to an agent,
+now merely verified after the fact by M5 and the FE agent's grep. Making it a scripted step is
+the structural close and should be its own upgrade.
+
+**Commit:** <pending user confirmation>
+
+---
+
+## [2026-08-23] code standards — Conventions become lint; backend gets a gate; lint gets teeth
+
+**Trigger (user report):**
+> "Agent đang không tuân thủ code quality, code rất tệ… mặc dù có skill senior-frontend,
+> react-best-practice mà tôi cảm giác code như của 1 junior vậy. Đây mới chỉ là frontend tôi
+> còn chưa review backend." Follow-up scope: fix ① convention, ② backend standards,
+> ④ make the lint gate blocking. (③ pre-write decomposition plan and ⑤⑥ deferred by the user.)
+
+**Iteration count:** 4th+ in the enforcement class (see the 1.10.5 motion entry and the
+2026-08-23 reviewer entry above). Previous rounds patched *detection*; this one patches the
+*mechanism*.
+
+**Root cause:**
+Three separate holes, one shape — **standards existed as prose that nothing executed.**
+1. *Conventions were a markdown table.* The naming/type/file conventions lived only in
+   `core/cto.md` → File Blueprint. Grep across the whole framework for
+   `naming-convention|filename-case|import/order|consistent-type-imports` returned **0**.
+   Nothing machine-checked any of them, so "convention" meant "whatever the agent felt like".
+2. *Backend had 0 of 4 enforcement layers.* The hook matched `.tsx|.jsx` only; the single
+   ESLint template was `plugins: ["react"]`; `code-quality.md` had no backend section
+   (grep "backend" = 0); the reviewer had §1b Frontend and no backend counterpart. Backend
+   code was governed solely by the generic Clean Code prose that had already been shown to
+   fail on the frontend.
+3. *The build gate had no teeth.* `code-quality.md` claimed "`npm run lint` MUST pass before
+   a task is marked complete", but `post-task-validate.sh` — the `SubagentStop` hook that
+   could enforce it — only compared `git status` counts and **always `exit 0`**. Passing lint
+   was an agent self-assertion that nothing verified.
+
+**Upgrade type:** [ added + strengthened ]
+
+**Files touched:**
+- `templates/shared/eslintrc.conventions.json` (**new**) — the universal layer every TS/JS
+  project merges first: `naming-convention`, `consistent-type-imports`, `no-explicit-any`,
+  `no-magic-numbers`, `max-lines` 300, `max-lines-per-function` 30, `max-params` 4,
+  `max-nested-callbacks` 3, `max-depth` 4, `complexity` 10, `prefer-const`, `eqeqeq`,
+  `no-console`. Rules needing extra plugins are quarantined in a `//optional` key with their
+  install command, so merging the file can never break a project on an unknown rule id.
+- `templates/backend/eslintrc.backend.json` (**new**) — layer-boundary enforcement via
+  `no-restricted-imports` overrides (route/controller may not import the ORM or a repository;
+  a service may not import a controller), `no-floating-promises`, `only-throw-error`,
+  `no-empty` without `allowEmptyCatch`, and `process.env` restricted to the config module.
+- `templates/frontend/eslintrc.frontend.json` — refactored to layer ON TOP of the shared file
+  (React-only rules remain); `.tsx` gets a relaxed 80-line function limit because JSX is
+  markup, while the 300-line FILE limit is not relaxed; tests exempted.
+- `helpers/code-quality.md` (+90) — new "Universal Code Conventions" section mapping every
+  prose convention to the lint rule that enforces it, plus the three-file merge order; new
+  "Backend Code Standards" section (B1–B5) with its own honest coverage table.
+- `agents/google-code-reviewer.md` — new **§1c Backend Code Standards**; checklist 7 → 8 areas.
+- `agents/netflix-backend-architect.md` — new **GATE 3** (was TWO gates, now THREE): the five
+  backend standards, a mandatory pre-write "does this already exist?" grep by identifier AND
+  literal, and the merge-then-`--print-config`-verify step.
+- `agents/meta-react-architect.md` — merge order updated; verification switched from grepping
+  the config file to `npx eslint --print-config` (which resolves `extends`; a raw grep does not).
+- `hooks/enforce-frontend-standards.sh` → **renamed** `hooks/enforce-code-standards.sh`, now
+  covering `.ts/.js` as well and adding a **file-size hard gate** with a *no-new-violations*
+  policy: an already-over-limit file is only warned about while it is not growing, so legacy
+  files stay editable and shrinkable; a new over-limit file, or one that grew, is blocked.
+- `hooks/post-task-validate.sh` — **lint gate added**: runs the project's `npm run lint` over
+  the change and `exit 2`s with the output on failure. Timeout raised 10s → 180s in both
+  `settings.json` and `hooks/hooks.json`.
+- mirrored to `plugins/vfm-agent-company/**`; version 1.9.1 → 1.10.0.
+
+**General principles added:**
+1. A convention that no tool executes is not a convention. Every prose rule that a linter can
+   express MUST be shipped as a lint rule, and the prose MUST name the rule id that enforces it.
+2. Enforcement layers MUST be declared per standard, honestly, including the standards whose
+   only layer is human review — where that is the case, the review is the gate and must be
+   graded from measurements.
+3. Every area of the codebase gets the same four layers, or the gap must be stated. Parity is
+   the default; a missing layer is a finding, not an omission.
+4. A limit introduced onto an existing codebase MUST ship with a no-new-violations policy so
+   it can be adopted without freezing work — and with an explicit ban on deleting the rule to
+   make the build green.
+5. A claim of the form "X MUST pass before completion" MUST be executed by a hook. If no hook
+   runs it, delete the claim rather than leave it as decoration.
+
+**Verification mechanism:**
+Hook A (file size): `wc -l` vs `git show HEAD:<path>` — blocks new/growing violations, warns on
+static legacy ones. Hook B (multi-component): unchanged AST-free heuristic. Lint gate: real
+`npm run lint` exit code, output piped back to the agent on stderr. Config presence:
+`npx eslint --print-config <file> | grep <rule-id>` in both agent gates and reviewer M5.
+All four hook paths were exercised against a scratch repo (new-over-limit → blocked;
+legacy shrinking → warned; legacy growing → blocked; test file → exempt) and both lint-gate
+paths (fail → exit 2 with output; pass → exit 0).
+
+**Self-score:**
+```
+  1. Specificity Avoidance  : 10/10   (rules are rule-ids and thresholds; no project nouns)
+  2. Verifiability          : 10/10   (every layer is an exit code or a --print-config grep;
+                                       all six paths executed, not reasoned about)
+  3. Placement              :  9/10   (GATE 3 before the persona; conventions above the
+                                       framework-specific sections)
+  4. Clarity                :  9/10   (merge order explicit; one threshold, stated once)
+  5. Completeness           :  9/10   (FE + BE parity; legacy-adoption path; plugin-missing
+                                       path; test/migration exemptions)
+  6. Anti-Regression Power  : 10/10   (a junior-shaped file now cannot be written at all, and
+                                       a task with failing lint cannot be marked complete)
+  7. Brevity                :  7/10   (+90 lines of helper prose; two new config files)
+  8. Evidence Grounding     : 10/10   (each hole tied to a grep that returned 0 or a hook that
+                                       returned exit 0)
+  9. Consistency            :  9/10   (300/30 now identical in prose, lint and reviewer M1/M2)
+ 10. Actionability          : 10/10   (merge order, install commands, verify command, and the
+                                       burn-down procedure are all copy-pasteable)
+────────────────────────────────
+ Overall                    : 9.3/10
+```
+Weakest: **Brevity 7/10** — same trade as the previous entry; procedure does not compress.
+
+**Deliberately NOT done (user-scoped out):** ③ pre-write decomposition-plan gate (the only
+remaining change that acts on the *production* side rather than detection), ⑤ rewriting the
+hollow `senior-frontend`/`senior-backend` skills, ⑥ verifying `skills_used:`. Also unaddressed
+by user decision: the folder-structure/Blueprint depth gap diagnosed this session — the user
+elected to review `architecture.md` manually instead.
+
+**Known drift found in passing (not fixed):** `plugins/vfm-agent-company/hooks/hooks.json`
+registers `subagent-verify-go.sh`, which has no counterpart in `.claude/settings.json`. The two
+hook registries have diverged; worth reconciling in its own pass.
+
+**Commit:** <pending user confirmation>
+
+**Follow-up (same 1.10.0 release): hook-registry drift closed + guarded.**
+The "known drift found in passing" above turned out to be a half-installed feature, not a
+stray file. Commit `74ba59f` ("enforce /go self-check for 11 code-producing specialists")
+mirrored the *instruction* half — the MANDATORY `/go` rule — into all 11 agent files on both
+sides, but put the *enforcement* half (`subagent-verify-go.sh` + its registration) into
+`plugins/hooks/hooks.json` only. `git log --all -- .claude/hooks/subagent-verify-go.sh`
+returns nothing: it never existed on the `.claude/` side. So in that runtime, eleven agent
+files carried "No /go PASS evidence = task NOT complete" and **nothing audited it**. The
+`validate-schema.py` PostToolUse hook (from the claude-seo merge) had the same one-sided
+registration.
+
+Fixed:
+- Ported `subagent-verify-go.sh`, `validate-schema.py`, `run-python-hook.js` into
+  `.claude/hooks/` and registered both hooks in `.claude/settings.json`.
+- Added `.claude/hooks/validate-schema.sh` — a stdin wrapper, because the plugin registry
+  passes the path via `${tool_input.file_path}` templating while `settings.json` hooks receive
+  the payload on stdin. Same behaviour, different plumbing; recorded as an alias in the checker.
+- **New: `.claude/scripts/check-hook-registry-drift.sh`** — compares the two registries
+  (normalising matcher order and group layout) and verifies every referenced script exists on
+  its own side. Exits 1 naming the gap. It found a real second difference while being written
+  (matcher `Write|Edit` vs `Edit|Write` in different groups), which is what a working detector
+  should do. Now reports: *19 hook registrations across 7 events, all scripts present on both
+  sides.*
+- **`claude-architect/SKILL.md` Step 4 gains a "Mirror to BOTH runtimes" block** — the general
+  principle: *a feature is not applied until its instruction half AND its enforcement half
+  exist on both sides*, with the two commands to prove it and an explicit ban on bumping the
+  version while either reports a difference.
+
+General principle (6th for this entry): **when a system ships more than one copy of itself,
+parity between the copies MUST be machine-checked. A rule that is enforced in one runtime and
+decorative in another is worse than no rule — it reads as covered.**
+
+**Commit:** <pending user confirmation>
+
+---

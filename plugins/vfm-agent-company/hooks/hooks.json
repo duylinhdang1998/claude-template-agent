@@ -18,7 +18,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/enforce-frontend-standards.sh",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/enforce-code-standards.sh",
             "timeout": 10
           },
           {
@@ -88,7 +88,7 @@
           {
             "type": "command",
             "command": "bash \"${CLAUDE_PLUGIN_ROOT}\"/hooks/scripts/post-task-validate.sh",
-            "timeout": 10
+            "timeout": 180
           },
           {
             "type": "command",

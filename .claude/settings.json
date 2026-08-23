@@ -39,7 +39,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/enforce-frontend-standards.sh",
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/enforce-code-standards.sh",
             "timeout": 10
           },
           {
@@ -52,6 +52,11 @@
             "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/auto-commit-milestone.sh",
             "timeout": 15,
             "async": true
+          },
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/validate-schema.sh",
+            "timeout": 15
           }
         ]
       }
@@ -95,6 +100,11 @@
           {
             "type": "command",
             "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/post-task-validate.sh",
+            "timeout": 180
+          },
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/subagent-verify-go.sh",
             "timeout": 10
           },
           {

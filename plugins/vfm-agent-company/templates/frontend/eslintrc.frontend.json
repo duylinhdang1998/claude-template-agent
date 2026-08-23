@@ -1,14 +1,29 @@
 {
-  "//": "VFM Frontend Code Standards — MANDATORY build gate. Merge these rules into the project's ESLint config (.eslintrc.json / eslint.config.*). `npm run lint` MUST pass before a frontend task is marked complete. See helpers/code-quality.md → 'Frontend Code Standards'.",
+  "//": "VFM Frontend Code Standards — React/Next specific. MERGE ORDER: templates/shared/eslintrc.conventions.json FIRST (naming, imports, max-lines 300, max-lines-per-function 30, clean-code metrics), THEN this file on top. `npm run lint` MUST pass before a frontend task is marked complete. See helpers/code-quality.md → 'Frontend Code Standards'.",
+  "//requires": "npm i -D eslint-plugin-react (plus the shared file's requirements)",
+  "//verify": "npx eslint --print-config <any>.tsx | grep -E 'no-multi-comp|max-lines' — both MUST appear. A gate you did not grep for is a gate you do not have.",
+  "//covers": "Standard #1 (one component per file) and #4 (no static inline style). Standards #2 (design tokens) and #3 (extract shared logic) have NO lint rule — google-code-reviewer is their only gate.",
   "plugins": ["react"],
   "rules": {
     "react/no-multi-comp": ["error", { "ignoreStateless": false }],
     "no-restricted-syntax": [
-      "warn",
+      "error",
       {
         "selector": "JSXAttribute[name.name='style'] > JSXExpressionContainer > ObjectExpression:not(:has(Identifier)):not(:has(TemplateLiteral)):not(:has(MemberExpression))",
         "message": "Rule #4: no STATIC inline styles. Use a Tailwind utility class. style={} is allowed ONLY when the value is computed from a variable at runtime."
       }
     ]
-  }
+  },
+  "overrides": [
+    {
+      "//": "Components legitimately exceed the generic 30-line function limit (JSX is markup, not logic). Keep the FILE limit at 300 — that one is not relaxed.",
+      "files": ["*.tsx", "*.jsx"],
+      "rules": { "max-lines-per-function": ["warn", { "max": 80, "skipBlankLines": true, "skipComments": true }] }
+    },
+    {
+      "//": "Tests are allowed to be long and repetitive — clarity beats brevity in a spec.",
+      "files": ["*.test.*", "*.spec.*", "**/__tests__/**"],
+      "rules": { "max-lines": "off", "max-lines-per-function": "off", "no-magic-numbers": "off" }
+    }
+  ]
 }

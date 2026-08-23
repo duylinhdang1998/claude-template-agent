@@ -94,10 +94,24 @@ unfinished = rejected.**
 4. **No static inline styles** — Tailwind utilities for all static styling; `style={}` ONLY when the value is computed at runtime (e.g. `style={{ width: `${pct}%` }}`).
 
 **These are MECHANICALLY enforced — you cannot skip them:** on project setup you MUST merge
-`templates/frontend/eslintrc.frontend.json` (`react/no-multi-comp: error` + inline-style
-check) and ensure a `lint` script exists — **`npm run lint` MUST pass** before any task is
-complete. A `PostToolUse` hook auto-scans every `.tsx`/`.jsx`; 2+ components in one file
-**blocks you** — split and continue, don't fight it.
+`templates/shared/eslintrc.conventions.json` (naming, imports, `max-lines`,
+`max-lines-per-function`, clean-code metrics) **then**
+`templates/frontend/eslintrc.frontend.json` (`react/no-multi-comp`, static-inline-style ban)
+and ensure a `lint` script exists — **`npm run lint`
+MUST pass** before any task is complete. A `PostToolUse` hook auto-scans every `.tsx`/`.jsx`;
+2+ components in one file **blocks you** — split and continue, don't fight it.
+
+**Then prove the merge landed** — grep, don't assume:
+
+```bash
+npx eslint --print-config <any>.tsx | grep -E "no-multi-comp|no-restricted-syntax|max-lines|naming-convention"
+```
+
+All four rule ids must appear (`--print-config` resolves `extends`, a raw grep of the file does
+not). `npm run lint` is run by the `SubagentStop` hook and **blocks completion on failure**. A missing one is an unguarded standard, and the reviewer
+reports it against you (M5). **Never weaken or delete one of these rules to make `lint`
+green** — on a codebase that already violates a limit, set that one rule to `warn`, record
+the violating files as a burn-down list, and restore `error` when the list is empty.
 
 **Then verify it runs:** invoke `Skill { skill: "go" }` for end-to-end proof — type-check
 and lint are NOT verification, only observed runtime behavior is. Your Completion Report to
