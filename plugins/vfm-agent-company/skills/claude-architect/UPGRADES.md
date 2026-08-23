@@ -373,7 +373,7 @@ slogan without becoming prose again — which is the exact failure being fixed.
 now merely verified after the fact by M5 and the FE agent's grep. Making it a scripted step is
 the structural close and should be its own upgrade.
 
-**Commit:** <pending user confirmation>
+**Commit:** 00b8391
 
 ---
 
@@ -495,7 +495,7 @@ elected to review `architecture.md` manually instead.
 registers `subagent-verify-go.sh`, which has no counterpart in `.claude/settings.json`. The two
 hook registries have diverged; worth reconciling in its own pass.
 
-**Commit:** <pending user confirmation>
+**Commit:** 00b8391
 
 **Follow-up (same 1.10.0 release): hook-registry drift closed + guarded.**
 The "known drift found in passing" above turned out to be a half-installed feature, not a
@@ -529,6 +529,6 @@ General principle (6th for this entry): **when a system ships more than one copy
 parity between the copies MUST be machine-checked. A rule that is enforced in one runtime and
 decorative in another is worse than no rule — it reads as covered.**
 
-**Commit:** <pending user confirmation>
+**Commit:** 00b8391
 
 ---
