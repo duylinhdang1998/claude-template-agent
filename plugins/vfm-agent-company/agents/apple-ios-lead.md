@@ -10,7 +10,7 @@ lazySkills:
   - swift-expert
   - ios-architecture
   - systematic-debugging
-  - ui-ux-pro-max-skill
+  - ui-design-system
 memory: project
 agentName: Jennifer Lee
 ---

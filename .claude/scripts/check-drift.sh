@@ -71,6 +71,39 @@ if [ -d "$SRC/hooks" ]; then
   done
 fi
 
+# ── Reference integrity ─────────────────────────────────────────────────────
+# The mirror check above only proves the two copies are IDENTICAL. It cannot see
+# a reference that is broken in BOTH copies — e.g. an agent that says
+# `Read helpers/x.md` for a file nobody ever wrote, or a `lazySkills:` entry
+# naming a plugin instead of a skill. Those fail silently at runtime: the agent
+# reads nothing and improvises. Check every pointer resolves, on each side.
+REFTMP="$(mktemp)"
+check_refs() {
+  local base="$1" label="$2" f ref s
+  for f in "$base"/core/*.md "$base"/agents/*.md; do
+    [ -f "$f" ] || continue
+    # a) helpers/<name>.md pointers
+    for ref in $(grep -oE 'helpers/[a-z0-9._-]+\.md' "$f" 2>/dev/null | sort -u); do
+      if [ ! -f "$base/$ref" ]; then
+        echo "  ✗ DANGLING REF   ($label): ${f#$base/} → $ref"; echo x >>"$REFTMP"
+      fi
+    done
+    # b) lazySkills: entries must resolve to a skill directory
+    for s in $(awk '/^lazySkills:/{inb=1;next}
+                    inb && /^[[:space:]]*-[[:space:]]/{sub(/^[[:space:]]*-[[:space:]]*/,"");print;next}
+                    inb{exit}' "$f"); do
+      case "$s" in *:*) continue;; esac   # plugin-qualified skill, not local
+      if [ ! -d "$base/skills/$s" ]; then
+        echo "  ✗ DANGLING SKILL ($label): ${f#$base/} lazySkills → $s"; echo x >>"$REFTMP"
+      fi
+    done
+  done
+}
+check_refs "$SRC"  "canonical"
+check_refs "$PLUG" "plugin"
+if [ -s "$REFTMP" ]; then DRIFT=1; fi
+rm -f "$REFTMP"
+
 echo "──────────────────────────────────────────────"
 if [ "$DRIFT" -eq 0 ]; then
   echo " ✓ In sync."

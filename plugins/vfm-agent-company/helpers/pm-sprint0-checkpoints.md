@@ -62,6 +62,20 @@ Requirements gathered. Please confirm the following decisions:
    OK with the team above?
 
 ────────────────────────────────────────────────────────
+5️⃣ SPRINT 0 FOUNDATION (automatic — not a choice)
+────────────────────────────────────────────────────────
+   Before any feature work, Sprint 0 builds the skeleton every later
+   sprint inherits:
+     · project structure per the architecture File Blueprint
+     · lint / format / type-check standards for BOTH frontend and backend
+     · the base component layer (buttons, fields, cards, modals… all states)
+     · app/CONVENTIONS.md
+
+   Why: from Sprint 1 on, 2-5 agents build in parallel. Anything not
+   decided once here gets invented N times, N different ways — which is
+   what makes a UI look inconsistent no matter how good each part is.
+
+────────────────────────────────────────────────────────
 Reply briefly (e.g., "1, ok, ok" or specify details)
 ```
 

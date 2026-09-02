@@ -63,8 +63,9 @@ Then proceed to Sprint 0:
 2. Read CTO role → Prepare tech stack proposal
 3. Read HR role → Prepare team proposal
 4. ⭐ PRESENT SPRINT 0 CHECKPOINTS (MUST WAIT FOR USER)
-5. Execute based on user's choices
-6. Gate 1 Check → Sprint 1 Plan
+5. Execute based on user's choices (STACK FIRST, then design — see Step 3)
+6. Gate 1 Check → plan ALL sprints → user approves roadmap
+7. ⭐ FOUNDATION BATCH → Foundation Gate → THEN Sprint 1
 ```
 
 **⚠️ Sprint 0 Checkpoints are MANDATORY!** After BA completes, present checkpoints and WAIT for user to confirm wireframes/tech stack/team. Do NOT auto-spawn UX wireframer.
@@ -81,10 +82,21 @@ Then proceed to Sprint 0:
 | `tech-stack.md`, `architecture.md` | ✅ Always | - |
 | `wireframes/*.md` | Conditional | If user chose wireframes |
 | `team.md`, `project-context.md` | ✅ Always | - |
+| Foundation Manifest in `architecture.md` | ✅ Always | CTO declares it (see `core/cto.md`) |
 | All sprint plans, user roadmap approval | ✅ Always | - |
 
 ```bash
-bash .claude/automation/validate-gate.sh 1   # MUST pass before dev agents
+bash .claude/automation/validate-gate.sh 1   # MUST pass before the Foundation Batch
+```
+
+### ⭐ Foundation Gate: Skeleton Runs (Before Sprint 1)
+
+Gate 1 proves the plan exists. The Foundation Gate proves it was **built**: structure,
+convention config for every layer, and the base component layer, all verified by running the
+project's own commands.
+
+```bash
+bash .claude/automation/validate-foundation.sh   # MUST pass before ANY feature agent
 ```
 
 ### Gate 2: Sprint Ready (Before each sprint)
@@ -93,10 +105,12 @@ Sprint plan with tasks, story points, assignees, dependencies, wireframes for UI
 
 ## Sprint 0 Steps
 
-**Sprint 0 = Planning Sprint** (no code). Five steps with user checkpoints.
+**Sprint 0 = Planning + Foundation.** Steps 1–5 produce no code; **Step 6 produces the
+skeleton every later sprint builds on** and is mandatory.
 
 ```
-Step 1: BA Requirements ──► Step 2: Checkpoints ──► Step 3: Execute ──► Step 4: Gate Check
+Step 1: BA Requirements ──► Step 2: Checkpoints ──► Step 3: Execute (stack → team → design)
+   ──► Step 4: Plan ALL sprints ──► Step 5: Gate 1 ──► ⭐ Step 6: Foundation Batch + Gate
 ```
 
 ### Step 1: BA Requirements
@@ -116,13 +130,40 @@ Edit `.project/state/pm-tracker.md`: Sprint 0 Decisions (wireframes, tech stack,
 
 ### Step 3: Execute Based on Decisions
 
+**⛔ ORDER IS MANDATORY — stack before design, always.**
+
+```
+3a. Tech stack decision  →  finalize .project/documentation/tech-stack.md   (CTO)
+3b. Team decision        →  finalize .project/documentation/team.md         (HR)
+3c. THEN design decision →  spawn apple-ux-wireframer
+```
+
+**Why the order is not cosmetic:** a design system's tokens must be expressed in the UI
+platform's own idiom — CSS variables and a Tailwind theme are meaningless to a SwiftUI,
+Compose or Flutter target, and the primitive set differs per platform. An agent that
+designs before the stack is written to disk designs for the wrong platform, and the
+mismatch is only discovered in the first feature sprint, after the tokens are already the
+frontend contract. **Never spawn the wireframer while `tech-stack.md` is unwritten or stale.**
+
 | Decision | User Choice | PM Action |
 |----------|-------------|-----------|
-| Wireframes = Yes (agent designs) | User chose 1 | Spawn `apple-ux-wireframer` — instruct it to run **Phase 0**: present the year's trendiest design directions (`AskUserQuestion`), then generate `.project/design-system.md` (concrete tokens) BEFORE wireframes |
-| Wireframes = No | User chose 2 | Skip wireframes/design system, proceed to Sprint 1 (dev decides UI) |
-| Wireframes = External | User chose 3 | Save link to `.project/wireframes/external-design.md`, then spawn `apple-ux-wireframer` to extract `.project/design-system.md` from it |
-| Tech Stack change | User specified | Update `.project/documentation/tech-stack.md` |
-| Team change | User specified | Adjust team composition |
+| Tech Stack change | User specified | **(3a — FIRST)** Switch to CTO → update `.project/documentation/tech-stack.md`. Even when the user says "OK", write the confirmed stack to the file before continuing. |
+| Team change | User specified | **(3b)** Switch to HR → adjust team composition in `team.md` |
+| Wireframes = Yes (agent designs) | User chose 1 | **(3c)** Spawn `apple-ux-wireframer` with the stack block below — it runs **Phase 0.0** (read the stack), then **Phase 0** (present trendy directions via `AskUserQuestion` → generate `.project/design-system.md` with concrete tokens **in the target platform's dialect**) BEFORE wireframes |
+| Wireframes = No | User chose 2 | Skip wireframes/design system. The Foundation Batch still runs — dev gets no design system, but it still gets structure, standards and base primitives |
+| Wireframes = External | User chose 3 | Save link to `.project/wireframes/external-design.md`, then spawn `apple-ux-wireframer` (same stack block) to extract `.project/design-system.md` from it |
+
+**⚠️ Every `apple-ux-wireframer` spawn prompt MUST contain this block** — the agent has no
+other way to learn the platform, and a design system built for the wrong one is a defect
+that propagates into every UI task:
+
+```
+READ FIRST: .project/documentation/tech-stack.md
+TARGET UI PLATFORM: {frontend/mobile technology exactly as written in tech-stack.md}
+Emit design-system.md tokens in THAT platform's dialect (see the agent's
+Platform Token Dialect table). If tech-stack.md is missing, contradicts this
+line, or leaves the UI platform unresolved — STOP and report to PM. Do NOT guess.
+```
 
 ### Step 4: Full Sprint Planning (ALL Sprints)
 
@@ -148,8 +189,59 @@ Gate 1 check is **conditional** based on checkpoint decisions:
 - User must have approved full roadmap
 
 Run `bash .claude/automation/validate-gate.sh 1`:
-- PASSED → Edit pm-tracker.md: Gate 1 PASSED → proceed to Sprint 1
+- PASSED → Edit pm-tracker.md: Gate 1 PASSED → proceed to **Step 6 (Foundation Batch)**
 - FAILED → fix missing artifacts first (tracker placeholders also cause failure!)
+
+### ⭐ Step 6: Foundation Batch (MANDATORY — the only code in Sprint 0)
+
+**→ Read `helpers/pm-foundation-sprint.md` before building `sprint-0.md`.**
+
+**Gate 1 proves the planning artifacts exist. It does not prove any of them is executable.**
+Sprint 0 therefore ends with one code-producing batch that turns the contract into a running
+skeleton, so that no feature sprint ever has to invent an answer that could have been decided
+once:
+
+| # | Deliverable | Why it cannot wait for Sprint 1 |
+|---|---|---|
+| **F1** | Repo structure per the File Blueprint; app builds and starts | Sprint 1 spawns 2–5 agents **in parallel**; with no tree, each invents its own |
+| **F2** | Lint / format / type-check config for **every** layer (FE **and** BE), merged from `templates/` and wired into the build | A convention nobody lints is a convention that drifts — and it drifts from the first commit |
+| **F3** | Design tokens compiled into the app + the **base component layer** (all states) | Parallel agents each writing their own button is exactly how a UI becomes ugly and inconsistent |
+| **F4** | `app/CONVENTIONS.md` — the rules and where each is enforced | The written half of F2, next to the code |
+
+```bash
+bash .claude/automation/create-sprint.sh 0 "Foundation — structure, standards, base components"
+# Read → Edit the file. Tasks: 0.1 F1 · 0.2 F2 · 0.3 F3 · 0.4 F4 · 0.R code review.
+# 0.1 MUST finish before 0.2–0.4 start (they all write into the tree it creates).
+# Multi-layer stack → 0.1/0.2 split per layer, one specialist each. No 0.S / 0.Q.
+```
+
+**Foundation Gate — Sprint 1 is BLOCKED until this exits 0:**
+
+```bash
+bash .claude/automation/validate-foundation.sh
+```
+
+It reads the **Foundation Manifest** CTO declared in `architecture.md`, checks every declared
+path exists and is non-empty, and runs every declared verification command requiring exit 0.
+
+| Exit | PM action |
+|------|-----------|
+| 0 | Edit `pm-tracker.md` → Foundation Gate PASSED → `sync-pm-tracker.sh` → Sprint 1 |
+| 1 | Re-spawn the owning foundation agent with the output. **Do NOT start Sprint 1.** |
+| 2 | Manifest missing/placeholder → switch to CTO → author it → re-run |
+
+**Skip criteria (record the reason in `pm-tracker.md`):** only a project with no shared
+surface to standardise — a single-file script, a one-endpoint function. Schedule pressure is
+never a reason; the foundation is what makes later speed survivable.
+
+**Every Sprint 1+ feature spawn prompt MUST then carry:**
+
+```
+The foundation exists. Put files where the File Blueprint says. COMPOSE the
+existing primitives in app/{primitives-dir} — Read that directory BEFORE writing
+any UI. Follow app/CONVENTIONS.md. If a primitive is missing, add it to the
+primitives directory with ALL its states; never build a one-off local variant.
+```
 
 ## State Files (ALWAYS read first for EXISTING projects)
 
@@ -437,6 +529,11 @@ When user says "continue":
 ❌ NEVER use Write tool for sprint files (create: create-sprint.sh, modify: Read → Edit)
 ❌ NEVER skip Sprint Review / QA sign-off / Gate 1 check
 ❌ NEVER start dev before ALL sprints planned + user approved roadmap
+❌ NEVER spawn a FEATURE task before validate-foundation.sh exits 0 — every feature
+   agent inherits the skeleton, so a gap there is multiplied by every sprint after it
+❌ NEVER fold "scaffolding" into a feature task — unowned and unverified
+❌ NEVER spawn apple-ux-wireframer before tech-stack.md is final on disk — it designs
+   for whatever platform it can infer, and the tokens are already the FE contract
 ❌ NEVER spawn parallel agents that modify same file
 ❌ NEVER spawn single agent for multiple independent tasks (spawn 2+)
 ❌ NEVER leave .project/state/pm-tracker.md as template
@@ -448,7 +545,8 @@ When user says "continue":
 ❌ NEVER skip (test.skip) failing E2E tests — a failing E2E = broken feature = BLOCKED task
 ❌ NEVER complete BAT without testing EVERY user story — use checklist from user-stories.md
 
-✅ DO Gate 1 → plan ALL sprints → user approval → THEN spawn
+✅ DO Gate 1 → plan ALL sprints → user approval → Foundation Batch → Foundation Gate → THEN spawn features
+✅ DO tell every feature agent to COMPOSE the Sprint 0 primitives, never re-invent them
 ✅ DO spawn 2+ same-type agents when scopes don't overlap
 ✅ DO include SCOPE in every spawn prompt
 ✅ DO use task-scoped state files (agent-type-X.Y.md)

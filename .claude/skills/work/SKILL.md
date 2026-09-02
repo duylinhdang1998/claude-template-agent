@@ -32,18 +32,26 @@ Phase 1: CEO Approval
 ├── 2. 🎯 [CEO] → Ask HIGH-LEVEL questions if needed
 └── 3. 🎯 [CEO] → Approve scope → Delegate to PM
 
-Phase 2: Sprint 0 (Planning - No Code)
+Phase 2: Sprint 0 (Planning, then Foundation)
 ├── 4. 📋 [PM] → Read core/pm.md → Init project (bash init-project.sh)
 ├── 5. 📊 [BA] → Read core/ba.md → Ask DETAILED questions → Write SRS
 ├── 6. 📋 [PM] → ⭐ SPRINT 0 CHECKPOINTS ⭐ (user confirms decisions)
 │       ├── Wireframes: Yes / No / External design?
 │       ├── Tech Stack: OK / Modify?
 │       └── Team: OK / Modify?
-├── 7. 🏗️ [CTO] → Read core/cto.md → (if user confirms) Finalize tech-stack.md
-├── 8. 👥 [HR] → Read core/hr.md → (if user confirms) Finalize team.md + VERIFICATION
-├── 9. 🎨 [UX] → (if agent designs) Spawn apple-ux-wireframer → present trendy
-│       design directions → user picks → generate .project/design-system.md + wireframes
-└── 10. 📋 [PM] → Read core/pm.md → Phase Gate 1 Check → Sprint 1 Plan
+├── 7. 🏗️ [CTO] → Read core/cto.md → Finalize tech-stack.md + architecture.md
+│       (File Blueprint + ⭐ Foundation Manifest) ── MUST precede step 9
+├── 8. 👥 [HR] → Read core/hr.md → Finalize team.md + VERIFICATION
+├── 9. 🎨 [UX] → (if agent designs) Spawn apple-ux-wireframer → ⛔ Phase 0.0 reads
+│       tech-stack.md (tokens MUST match the chosen UI platform) → present trendy
+│       directions → user picks → .project/design-system.md + primitives + wireframes
+├── 10. 📋 [PM] → Phase Gate 1 Check → plan ALL sprints → user approves roadmap
+└── 11. 📋 [PM] → ⭐ FOUNDATION BATCH (sprint-0.md — the only code in Sprint 0)
+        ├── F1 structure per File Blueprint (app builds + starts)
+        ├── F2 lint/format/type standards — FRONTEND *and* BACKEND, proven to reject
+        ├── F3 design tokens compiled + BASE COMPONENT LAYER (all states)
+        ├── F4 app/CONVENTIONS.md
+        └── 🚦 validate-foundation.sh MUST exit 0 → only then Sprint 1
 
 Phase 3: Development (Sprint 1+)
 ├── 11. 📋 [PM] → SPAWN specialists in PARALLEL
@@ -65,6 +73,11 @@ Phase 4: Bug Fix (Post-release)
 - CEO approves, PM orchestrates
 - PM "wears different hats" (CTO, HR, BA) when reading those roles
 - **Sprint 0 Checkpoints** allow user to skip wireframes, modify tech stack, adjust team
+- **Sprint 0 Foundation is mandatory** — structure, FE+BE code standards, and the base
+  component layer are built and verified BEFORE any feature sprint. From Sprint 1 on,
+  2-5 agents build in parallel; anything not decided once here is invented N times
+- **Stack before design** — the wireframer reads `tech-stack.md` first, so the design
+  system is emitted in the target UI platform's own token dialect
 - Role indicators (🎯🏗️👥📋📊🎨) are MANDATORY for each output
 - HR verification checklist MUST be completed before spawning
 - **NO nested agent spawning** - only one layer of actual agents (specialists)

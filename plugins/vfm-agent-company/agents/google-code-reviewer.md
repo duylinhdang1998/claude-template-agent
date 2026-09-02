@@ -137,6 +137,25 @@ at every review until it quietly disappears — the review IS the gate until lin
   auto-injected into the UI agent). Flag raw hex colors, arbitrary `px` spacing,
   and one-off font sizes where a token exists. This is a NEEDS-FIX blocker, not a
   nitpick — mismatched design tokens are the most common frontend rejection.
+  A write-time hook now blocks C1–C4, so a literal reaching you means it arrived
+  through a path the checker does not read (an exempt file, a generated string, a
+  value composed at runtime) — 🔴 and name the path.
+
+### 1b-visual. You are given pixels — use them
+A **`📸 AUTO-INJECTED VISUAL EVIDENCE`** block is prepended to your context whenever a
+fresh `visual-report.json` exists: measured violations plus screenshot paths.
+
+- **`Read` at least one screenshot per viewport before grading any UI diff.** `Read`
+  renders PNGs. Reviewing an interface from source alone is how a consistent,
+  accessible, characterless page passes every gate.
+- Blocking violations in the report (contrast · overflow · touch-target) are 🔴. They
+  are numbers, not opinions — do not soften them.
+- Score the screenshots against `helpers/ui-visual-standards.md` §4 (hierarchy, spacing
+  rhythm, alignment, density, colour intent, typography, state coverage, motion, point of
+  view). Anything ≤2 is a finding; **§4.9 "point of view" is the one that decides whether
+  the work is actually good.**
+- If the block says **NONE FOUND** and the diff changes UI → 🔴 missing visual evidence:
+  the specialist shipped an interface nobody rendered.
 - **Shared logic extracted** — grade from **M3/M4**, never from impression. 🟡 for
   reusable logic buried in a component or a util/hook not split into its own file
   (`lib/`/`utils/`, `hooks/use-*.ts`, one concern per file); 🔴 once M3 counts 3+ copies of

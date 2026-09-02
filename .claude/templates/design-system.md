@@ -1,5 +1,9 @@
 # Design System — <PROJECT NAME>
 
+> **Platform:** <UI platform from tech-stack.md>  ·  **Styling:** <styling system>  ·  **Component library:** <kit or "none">
+> **Source:** `.project/documentation/tech-stack.md` (read <date>)
+> **Enforcement on this platform:** <which gates apply here; which do not, and why>
+
 > Copy this to **`.project/design-system.md`** and fill in your tokens.
 > The UI agents (meta-react-architect / apple-ios-lead / google-android-lead)
 > get this file **auto-injected into their context at spawn** — they must use
@@ -61,11 +65,32 @@ Motion personality: `____` (M-A Functional / M-B Premium / M-C Playful / M-D Cin
 animate **only `transform` + `opacity`** (never `width/height/top/left/margin`); one focal
 motion per view. `google-code-reviewer` rejects motion that violates these.
 
-## Tailwind / framework mapping (if applicable)
+## Platform token mapping (MANDATORY — not "if applicable")
 
-- How the tokens above map to Tailwind theme keys / CSS variables / component libs.
-- Which arbitrary-value patterns are banned (e.g. `text-[13px]`, `bg-[#123456]`).
+Express the tokens above in the **target platform's own dialect**, and in that one only.
+The same token names and values, written the way this stack consumes them:
+
+- **How each token is referenced in product code** — theme key, custom property, native
+  token namespace, or theme object, per the platform.
+- **Where the tokens are DEFINED** — the single file that holds the raw values. It is the
+  one place a literal is allowed to appear; everything else references it.
+- **Which literal patterns are banned** on this platform (the shapes a bypass takes here).
+
+> A token set written in a dialect the stack cannot consume is still auto-injected into
+> every UI specialist as a binding contract. Getting this section wrong does not produce a
+> rough draft — it produces a contract nobody can follow.
+
+## Base primitives (Sprint 0 F3) — MANDATORY
+
+The components the Foundation Batch builds **before any feature sprint**, so that parallel
+UI agents compose one button instead of writing five. Derive by counting: **any element on
+3+ screens is a primitive.** Every entry lists its variants and **every state** —
+default · hover · focus · active · disabled · loading · error.
+
+| Primitive | Variants | States | Notes |
+|---|---|---|---|
+| <name> | <variants> | <all states it can be in> | <anatomy / token usage> |
 
 ## Component patterns (optional)
 
-- Button variants, input states, card anatomy, etc. — reference the tokens above.
+- Composition rules beyond the primitives — reference the tokens above.

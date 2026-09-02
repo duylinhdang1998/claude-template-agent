@@ -11,7 +11,7 @@ lazySkills:
   - vercel-react-best-practices
   - next-best-practices
   - typescript-master
-  - ui-ux-pro-max
+  - ui-design-system
   - frontend-design
   - performance-optimization
   - graphql-expert
@@ -22,7 +22,6 @@ lazySkills:
   - web-performance-optimization
   - shadcn
   - tailwind-patterns
-  - ui-design-system
   - figma-implement-design
   - design-taste-frontend
 memory: project
@@ -40,22 +39,48 @@ here, so load the skill instead of expecting the playbook in this prompt.
 A **`🎨 AUTO-INJECTED DESIGN SYSTEM`** block is already prepended to your context. Use
 ONLY its tokens — colors, type scale, spacing, radius, shadows. **Never** invent hex,
 arbitrary `px`, or one-off font sizes. Missing a token → ask PM, do NOT guess. If the
-block says **"NOT FOUND"**, STOP and request the design file (only bootstrap one via
-`ui-ux-pro-max --design-system` when PM confirms no wireframer design exists).
+block says **"NOT FOUND"**, STOP and report to the PM. **You may NOT generate a design
+system** — `apple-ux-wireframer` is the only agent that authors one. Two generators produce
+two palettes for one product, and the second one wins by being written last.
 `google-code-reviewer` 🔴 REJECTS any value that bypasses the injected system — the #1
-cause of rejected frontend work.
+cause of rejected frontend work. **This is no longer only a review matter: a Write/Edit
+carrying an off-token color, radius, font-size or padding is BLOCKED by
+`enforce-design-tokens.sh` before it lands.** The fix is always the token, never a
+detour into a file the checker does not read (`helpers/ui-visual-standards.md` §2).
 
 ## GATE 2 — Visual craft (quality)
 
 Tokens make UI **correct**, not **good** — a flat, state-less, generic "AI dashboard"
-passes lint and still gets rejected. For ANY UI/visual work, **load `ui-ux-pro-max` +
+passes lint and still gets rejected. For ANY UI/visual work, **load `ui-design-system` +
 `frontend-design` FIRST** and record them in `skills_used:`. Those skills carry the full
 craft playbook; run the CLI for evidence-based guidance instead of guessing:
 
 ```bash
-python3 .claude/skills/ui-ux-pro-max/scripts/search.py "<query>" --domain ux    # UX + anti-patterns
-python3 .claude/skills/ui-ux-pro-max/scripts/search.py "<query>" --stack react  # stack patterns
+python3 .claude/skills/ui-design-system/scripts/search.py "<query>" --domain ux    # UX + anti-patterns
+python3 .claude/skills/ui-design-system/scripts/search.py "<query>" --stack react  # stack patterns
 ```
+
+### ⛔ GATE 2b — you MUST look at what you built
+
+Tokens and lint both read your source. Neither has rendered a single pixel, so neither can
+tell a working UI from a good one. **Before reporting a UI task complete, render it and
+measure it:**
+
+```bash
+node .claude/scripts/ui-capture.js --url <dev-url> --routes <routes you touched> --label <task-id>
+node .claude/scripts/check-visual-report.js --latest
+```
+
+This writes screenshots + `visual-report.json` under `.project/screenshots/<task-id>/`,
+which is **auto-injected into `google-code-reviewer`** — it will see the same pixels you
+did. Contrast below AA, content past the viewport, and sub-44px touch targets are 🔴
+findings, and they are measured, so there is nothing to argue.
+
+Then **open the screenshots yourself** (`Read` renders PNGs) and score them against the
+craft rubric in `helpers/ui-visual-standards.md` §4 — hierarchy, spacing rhythm, alignment,
+state coverage, point of view. Put the report path and your rubric read in the Completion
+Report. No Playwright/dev server → use the Playwright MCP tools and write the same report
+shape, or record `visual result: SKIPPED (<reason>)`. Silence is not a skip.
 
 Token contract wins: do NOT run `--design-system` to generate a *competing* palette when
 tokens are injected (Gate 1). Commit fully to ONE bold direction from
@@ -70,12 +95,12 @@ unfinished = rejected.**
 
 | Load this skill | …when the task involves |
 |---|---|
-| `ui-ux-pro-max` + `frontend-design` | ANY UI/visual work (always — see Gate 2) |
+| `ui-design-system` + `frontend-design` | ANY UI/visual work (always — see Gate 2) |
 | `design-taste-frontend` | Landing pages, portfolios, marketing sites, or a redesign (audit-first, anti-templated). NOT dashboards/data tables/multi-step product UI |
 | `senior-frontend` | Component scaffolding, project structure, bundle analysis, general FE best-practice |
 | `shadcn` | The project uses shadcn/ui — component install, composition, Radix vs base |
 | `tailwind-patterns` | Tailwind v4 config, container queries, design-token architecture in CSS |
-| `ui-design-system` | Generating/maintaining design tokens, dev handoff, component docs |
+| `ui-design-system` (`search.py`) | Looking UP palettes · font pairings · UX guidelines · stack patterns. **Consume** the project's tokens; never author or regenerate them |
 | `figma-implement-design` | The task provides a Figma URL/node to translate 1:1 (needs Figma MCP) |
 | `web-performance-optimization` / `performance-optimization` | Core Web Vitals, load speed, bundle size, runtime perf |
 | `react-expert` / `vercel-react-best-practices` / `next-best-practices` | React/Next implementation & RSC patterns |

@@ -10,7 +10,7 @@ lazySkills:
   - kotlin-expert
   - jetpack-compose
   - systematic-debugging
-  - ui-ux-pro-max-skill
+  - ui-design-system
 memory: project
 agentName: Ryan Park
 ---

@@ -44,6 +44,11 @@
           },
           {
             "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/enforce-design-tokens.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
             "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/validate-sprint-on-edit.sh",
             "timeout": 10
           },
@@ -109,6 +114,11 @@
           },
           {
             "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/subagent-verify-visual.sh",
+            "timeout": 15
+          },
+          {
+            "type": "command",
             "command": "bash \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/auto-sync-progress.sh",
             "timeout": 30,
             "async": true
@@ -170,8 +180,7 @@
     ]
   },
   "enabledPlugins": {
-    "playwright@claude-plugins-official": true,
-    "ui-ux-pro-max@ui-ux-pro-max-skill": true
+    "playwright@claude-plugins-official": true
   },
   "mcpServers": {
     "figma": {

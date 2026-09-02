@@ -2,6 +2,16 @@
 
 **These rules apply to EVERY specialist, EVERY language, EVERY task.**
 
+> **⭐ Where these standards are INSTALLED: the Sprint 0 Foundation Batch.**
+> Every rule below is enforced by a config that some task has to create, wire into the build,
+> and prove rejects something. That task is **F2** of the Foundation Batch
+> (`helpers/pm-foundation-sprint.md`), which runs before the first feature sprint — because a
+> convention introduced in sprint three does not apply to sprints one and two, and the code
+> that already violates it is now the codebase. The same batch builds the **base component
+> layer (F3)**: with 2–5 UI agents running in parallel from Sprint 1 on, primitives that do
+> not exist yet get invented N times in N different ways. That is not a code-review problem —
+> no review can merge five buttons back into one.
+
 ## Clean Code
 
 | Principle | Rule |
@@ -120,26 +130,37 @@ exists) — `google-code-reviewer` §1 remains their only gate.
 | Standard | Hook | ESLint | Review |
 |---|---|---|---|
 | #1 one component per file | ✅ blocks | ✅ `react/no-multi-comp` | ✅ |
-| #2 design tokens | — | — | ✅ (only layer) |
+| #2 design tokens | ✅ blocks (`enforce-design-tokens.sh`, C1–C4) | — | ✅ |
 | #3 extract shared logic / no duplication | — | — | ✅ (only layer) |
 | #4 no static inline style | — | ✅ `no-restricted-syntax` | ✅ |
 | ≤ 300 lines per file | — | ✅ `max-lines` | ✅ M1 |
 | ≤ 30 lines per function | — | ✅ `max-lines-per-function` | ✅ M2 |
+| rendered contrast · overflow · touch target | ⚠️ audits (`subagent-verify-visual.sh`) | — | ✅ (screenshots injected) |
 
 **Where a standard's only layer is "Review", the review IS the gate** — it must be graded
 mechanically (measure, then judge), never as an impression. A standard enforced by prose
 alone gets re-argued as a trade-off at every review until it silently stops existing.
+Rule #2 spent its first releases in exactly that state; it is now checked against the
+project's generated token set on every write. **Rule #3 is the remaining prose-only row —
+treat it accordingly.**
+
+⚠️ **Two layers ≠ two kinds of proof.** The hook and ESLint both read SOURCE. Nothing above
+the last row has ever rendered the interface, so none of it can tell a well-formed UI from
+a good one. That is the job of the render loop and the craft rubric in
+**`helpers/ui-visual-standards.md`** — read it before any UI task, and treat its §4 rubric
+as the part no gate can do for you.
 
 ⚠️ **The lint layer is opt-in per project and therefore not guaranteed.** Nothing copies
-`eslintrc.frontend.json` automatically — the frontend agent merges it during scaffolding and
-MUST verify it landed (`grep` the config for the rule ids). The reviewer re-checks the same
+`eslintrc.frontend.json` automatically — **Foundation task F2 merges it and MUST demonstrate it
+rejecting a deliberate violation**, and any later agent MUST verify it landed (`grep` the
+config for the rule ids). The reviewer re-checks the same
 thing (M5) and reports any missing rule id as a 🔴 finding in its own right. Assume a gate
 exists only after you have grepped for it.
 
 | # | Rule | Do | Don't |
 |---|------|----|----|
 | **1** | **One component per file** | Each file exports exactly ONE component. Sub-components, even small ones, get their own file. File name = component name (PascalCase). | ❌ Two+ `export function`/`export const` components in the same file. ❌ Defining helper components below the main one. |
-| **2** | **Follow the project design system** | Use the project's design tokens, primitives, and patterns (colors, typography, spacing, radius, shadows). Read the design system reference (e.g. `clone-ui-design` skill / `references/DESIGN.md` / `design-system.md`) BEFORE writing UI. | ❌ Ad-hoc hex colors, arbitrary `px` spacing, one-off font sizes that bypass the system. |
+| **2** | **Follow the project design system** | Use the project's design tokens, primitives, and patterns (colors, typography, spacing, radius, shadows). Read the design system reference (e.g. `clone-ui-design` skill / `references/DESIGN.md` / `design-system.md`) BEFORE writing UI. **A write that bypasses a token is BLOCKED** — see `helpers/ui-visual-standards.md` §2 for the four checks and the exempt paths. | ❌ Ad-hoc hex colors, arbitrary `px` spacing, one-off font sizes that bypass the system. ❌ Moving a literal into a file the checker does not read. |
 | **3** | **Extract shared logic to its own file** | Shared functions → `lib/` or `utils/` (one concern per file). Shared stateful logic → `hooks/use-*.ts` (one hook per file). Shared UI → reusable component file. Clean separation, named for intent, reusable. | ❌ Copy-pasting the same helper into multiple components. ❌ Burying reusable logic inside a component. |
 | **4** | **No inline styles unless value is dynamic** | Use existing Tailwind utility classes for all static styling. Inline `style={}` is allowed ONLY when the value is computed at runtime from a variable (e.g. `style={{ width: \`${percent}%\` }}`, `style={{ transform: \`translateX(${x}px)\` }}`). | ❌ `style={{ color: 'red', padding: '8px' }}` for static values. ❌ Arbitrary Tailwind values when a token class exists. |
 

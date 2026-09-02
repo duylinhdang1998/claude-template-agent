@@ -109,13 +109,31 @@ PM picks skills from the agent's `lazySkills` list in its agent file (`.claude/a
 | meta-react-architect | React components | `react-expert` |
 | meta-react-architect | Next.js pages/routing | `next-best-practices` |
 | meta-react-architect | TypeScript types/generics | `typescript-master` |
-| meta-react-architect | Beautiful UI/design | `ui-ux-pro-max` |
+| meta-react-architect | Beautiful UI/design | `ui-design-system` (+ see note below) |
 | meta-react-architect | Performance | `performance-optimization` |
 | netflix-backend-architect | Node.js API | `node-backend` |
 | netflix-backend-architect | Prisma/DB | `prisma` |
 | netflix-backend-architect | Real-time | `real-time-systems` |
 | netflix-backend-architect | Auth/security | `security-expert` |
 | google-qa-engineer | Testing | `qa-testing` |
+
+### ⚠️ Two things a skill selection cannot buy you
+
+**1. `ui-design-system` is a searchable DATABASE, not a rule set.** Its `SKILL.md` contains no
+hierarchy, focal-point, density or spacing-rhythm rules — those live in `data/*.csv`, reached
+only by running its search script. Loading it and not querying it changes nothing.
+
+**2. The always-applicable UI craft rules are NOT a skill and are NOT optional.**
+`helpers/ui-visual-standards.md` §4 (hierarchy · spacing rhythm · alignment · density ·
+colour intent · typography · state coverage · motion · point of view) applies to every UI
+task on every project. `design-taste-frontend` goes deeper but is scoped to marketing
+surfaces and explicitly excludes dashboards/data tables — so on a product UI it does not
+load, and the §4 rubric is the only craft standard in play.
+
+**A skill informs the agent doing the work. It does not travel to the next agent.** What
+crosses an agent boundary is the ARTIFACT — the design system's tokens, and the screen's
+`Layout Intent` block. If a decision must survive to whoever builds the screen, it has to be
+written into the artifact; no amount of skill loading substitutes for that.
 
 ### Selection Rules
 

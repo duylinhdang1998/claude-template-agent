@@ -249,6 +249,54 @@ app/
 
 **5. Technology Choices** — Reference tech-stack.md
 
+**6. ⭐ Foundation Manifest (CRITICAL — gates Sprint 1)**
+
+The File Blueprint says what the code *should* look like. The Foundation Manifest says what
+Sprint 0 must have actually **produced**, in a form a script can check. Without it, "the
+foundation is done" is an unbacked claim and `validate-foundation.sh` has nothing to verify.
+
+CTO writes this block into `architecture.md`; `bash .claude/automation/validate-foundation.sh`
+reads it, requires every `paths:` entry to exist and be non-empty, and requires every
+`commands:` entry to exit 0. **Nothing about any stack is hardcoded in the script** — the
+project declares its own artifacts and its own verification commands, so the same gate works
+for a TypeScript, Swift, Kotlin, Dart, Go or Python project.
+
+````markdown
+## Foundation Manifest
+<!-- foundation-manifest:start -->
+paths:
+  - <the app root the build runs from>
+  - <the base component / primitive directory>       # UI projects
+  - <the compiled design-token file the app imports> # UI projects
+  - <the lint/format/type config for EACH layer>     # frontend AND backend
+  - <the conventions doc at the app root>
+commands:
+  - <build command, per layer>        # must exit 0
+  - <lint command, per layer>         # must exit 0
+  - <type-check command, per layer>   # must exit 0
+<!-- foundation-manifest:end -->
+````
+
+**Rules for the manifest:**
+
+- **Derive every entry from THIS project's stack** — read `tech-stack.md` first. Copying
+  another project's paths produces a gate that passes without checking anything.
+- **One entry per layer, not one per project.** A stack with a frontend and a backend
+  declares each layer's config and each layer's build/lint/type command separately; a
+  single command that only covers one layer leaves the other ungated.
+- **Every `commands:` entry MUST be runnable from the repo root** and MUST fail when the
+  thing it checks is broken. A command that cannot fail (`echo ok`, `true`) is not a check
+  — it is a way to make the gate report green while verifying nothing.
+- **Declare only what the foundation produces**, never feature files. The manifest is
+  re-run at every later gate; entries that name feature code make it fail on unrelated work.
+- Placeholders (`<...>`, `TODO`, `TBD`) cause the gate to exit 2 — fill them all.
+
+**When CTO must update it**: the same triggers as the File Blueprint (new layer added, build
+tooling changed, primitive directory moved). The two blocks describe the same tree; if they
+disagree, one of them is wrong.
+
+> Full foundation flow, task breakdown and spawn prompts: `helpers/pm-foundation-sprint.md`
+
 ### ⚠️ File Blueprint Update Rule
 
 **When adding features or fixing bugs that need NEW files:**
