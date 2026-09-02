@@ -855,7 +855,7 @@ simulator/emulator capture path writing the same `visual-report.json` shape is i
 `check-drift.sh` flags `hooks/scripts/validate-schema.sh` missing from the plugin runtime and
 `enforce-delegation.sh` differing. Neither was touched by this upgrade.
 
-**Commit:** <pending>
+**Commit:** `071cc37`
 
 ---
 
@@ -998,7 +998,7 @@ and famous-app patterns with no layout-intent vocabulary. It is the *element* re
 the standards file now owns conventions, so the split holds — but its "Best Practices" list
 (6 items, none about hierarchy) is the weakest surviving surface in this pipeline.
 
-**Commit:** <pending>
+**Commit:** `071cc37`
 
 ---
 
@@ -1111,4 +1111,4 @@ that ships (one author per artifact) contains no proper nouns.
 **Note for the user, not fixed here:** disabling the `ui-ux-pro-max-skill` marketplace plugin
 is a settings change that also affects any other project using this settings file.
 
-**Commit:** <pending>
+**Commit:** `071cc37`
