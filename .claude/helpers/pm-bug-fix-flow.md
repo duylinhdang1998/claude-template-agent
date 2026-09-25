@@ -18,6 +18,15 @@
 
 **If unsure, default to Feature Change flow (with BDD).** It's safer to have BDD scenarios reviewed by user than to skip them and discover misunderstandings mid-sprint.
 
+## ⚡ Fast-Track check (do this right after the guard above)
+
+If the bug report already has repro steps + expected + actual behavior (nothing left to ask)
+and the fix is scoped to identifiable files — this qualifies for Fast-Track
+(`helpers/pm-fast-track-flow.md`): **skip Step 2 (triage interview) and Step 5 (pre-spawn
+approval wait)**, go straight from Step 1 to Step 4 → Step 6, and do Step 4 (sprint file)
+*while* the dev agent runs instead of before dispatching it. Steps 3 and 6 are unchanged.
+If anything is missing or ambiguous, run the full Steps 1-6 below instead.
+
 ## Mandatory First Output
 
 ```
@@ -232,8 +241,9 @@ Spawn `google-qa-engineer` for task `{N+1}.Q`
 
 | Skips (bug fix sprint) | Keeps (bug fix sprint) |
 |------------------------|----------------------|
-| Sprint 0 | BA triage (Step 2 above) |
-| Gate 1 check | HR team check (Step 3 above) |
-| Wireframes | Specialist spawning |
-| Full SRS | Code review (Batch 2) |
-| | QA sign-off (Batch 3) |
+| Sprint 0 | HR team check (Step 3 above) |
+| Gate 1 check | Specialist spawning |
+| Wireframes | Code review (Batch 2) |
+| Full SRS | QA sign-off (Batch 3) |
+| BA triage (Step 2) — **if Fast-Track eligible** | BA triage (Step 2) — otherwise |
+| Pre-spawn approval wait (Step 5) — **if Fast-Track eligible** | Pre-spawn approval wait (Step 5) — otherwise |

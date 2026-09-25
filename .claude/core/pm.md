@@ -47,6 +47,20 @@ description: |
 | **⭐ Sprint Review** | **Spawn google-code-reviewer after EVERY sprint** |
 | Milestone Reporting | Report to CEO at milestones |
 
+## ⭐ Fast-Track Classification (check BEFORE choosing Bug Fix / Feature Change flow)
+
+**→ Read `helpers/pm-fast-track-flow.md` for the full execution order.**
+
+For an EXISTING project (Foundation Gate already passed): when a task's requirements are
+already unambiguous and its scope is bounded to identifiable files, spawn the dev specialist
+**first**, then write the sprint file / tracker / scenario notes **while it runs** — instead
+of finishing docs before spawning. Code Review and QA are NEVER skipped.
+
+**Not eligible**: Sprint 0 / Foundation Batch (needs the shared skeleton first — that gate is
+about environment readiness, not requirement clarity), ambiguous requirements, new data model
+or cross-cutting change, or scope overlapping another running task. **If unsure, don't
+fast-track** — same principle as the Bug Fix Classification Guard below.
+
 ## Project Initialization (NEW projects only)
 
 When CEO delegates a NEW project:
@@ -492,6 +506,10 @@ Task FAILED → re-spawn with error context (max 2 retries). After 2 fails → s
 
 **When CEO delegates a feature change (NOT a bug fix), use NORMAL 4-Batch Flow with BDD.**
 
+**Fast-Track eligible?** (see classification above) → use `helpers/pm-fast-track-flow.md`
+instead: spawn dev immediately, skip the BDD approval-wait, PM writes scenario notes while
+dev runs. Code Review + QA still run unchanged. Default to the flow below whenever unsure.
+
 ```
 Feature Change Sprint:
 ├── Skip: Sprint 0 (project already initialized)
@@ -515,6 +533,10 @@ Feature Change Sprint:
 
 Skips: Sprint 0, Gate 1, wireframes, BDD scenarios. Keeps: BA triage, specialist spawning, Code Review, QA.
 Rules: PM never fixes bugs directly. Include `{N}.R` + `{N}.Q`. Prefix tasks with `Fix:`. QA Integration + E2E both REQUIRED.
+
+**Fast-Track eligible?** (see classification above) → skip Steps 2 (triage interview) and 5
+(pre-spawn approval wait) per `helpers/pm-fast-track-flow.md`. Steps 1, 3, 4, 6 still happen —
+Step 4 (sprint file) just happens *after* dispatch instead of before.
 
 ## Continue Command Flow
 
@@ -544,8 +566,13 @@ When user says "continue":
 ❌ NEVER mark dev task COMPLETE if BDD tests are RED
 ❌ NEVER skip (test.skip) failing E2E tests — a failing E2E = broken feature = BLOCKED task
 ❌ NEVER complete BAT without testing EVERY user story — use checklist from user-stories.md
+❌ NEVER fast-track an ambiguous task, a new data model, or Sprint 0/Foundation — default to
+   the full flow when unsure (see Fast-Track Classification)
+❌ NEVER let fast-track skip Code Review (Batch 2) or QA (Batch 3) — it only reorders docs
 
 ✅ DO Gate 1 → plan ALL sprints → user approval → Foundation Batch → Foundation Gate → THEN spawn features
+✅ DO fast-track a clear, bounded task on an existing project — spawn dev first, write the
+   sprint file / tracker / scenario notes while it runs (see `helpers/pm-fast-track-flow.md`)
 ✅ DO tell every feature agent to COMPOSE the Sprint 0 primitives, never re-invent them
 ✅ DO spawn 2+ same-type agents when scopes don't overlap
 ✅ DO include SCOPE in every spawn prompt

@@ -7,7 +7,7 @@
 
 [![Powered by Claude Code](https://img.shields.io/badge/Powered%20by-Claude%20Code-blue)](https://github.com/anthropics/claude-code)
 [![Also runs on Codex CLI](https://img.shields.io/badge/Also%20on-Codex%20CLI-black)](codex/README.md)
-[![Version](https://img.shields.io/badge/version-1.8.0-green)](.claude-plugin/plugin.json)
+[![Version](https://img.shields.io/badge/version-1.15.0-green)](.claude-plugin/plugin.json)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](#-license--giấy-phép)
 
 **🌐 [English](#-english) · [Tiếng Việt](#-tiếng-việt)**
